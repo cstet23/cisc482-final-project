@@ -2,4 +2,5 @@
     <string name="app_name">FinalProject</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="moreSettingsText">There\'s nothing here for now...\n\nHopefully we\'ll have time to implement a color scheme picker here!\n\nIf you have any other ideas for settings you\'d like to see, please let us know!</string>
 </resources>

@@ -3,6 +3,7 @@
     <item
         android:id="@+id/alarms_cat"
         android:title="Alarms"
+        android:checked="true"
         />
     <item
         android:id="@+id/games_cat"

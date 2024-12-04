@@ -18,7 +18,6 @@ public class SettingsViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch(position) {
-            case 0: return new alarmsFragment();
             case 1: return new gamesFragment();
             case 2: return new moreFragment();
             default: return new alarmsFragment();
