@@ -1,6 +1,7 @@
          # Gradle build directory
          .gradle/
          build/
+         gradle.properties
 
          # IDE-specific files
          .idea/
