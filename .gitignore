@@ -1,0 +1,14 @@
+         # Gradle build directory
+         .gradle/
+         build/
+
+         # IDE-specific files
+         .idea/
+         *.iml
+         *.iws
+
+         # Local build outputs
+         out/
+
+         # OS-specific files
+         .DS_Store
