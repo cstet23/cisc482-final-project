@@ -1,6 +1,7 @@
 package com.ciscx82.finalproject;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +9,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class MainActivity extends AppCompatActivity {
+    // params
+    FloatingActionButton addButton;
+    NewAlarm newAlarm = new NewAlarm();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +26,13 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // get references for necessary params
+        addButton = findViewById(R.id.add_alarm_button);
+
+        // button onClick listeners
+        addButton.setOnClickListener(view -> getSupportFragmentManager().beginTransaction().replace(R.id.main, newAlarm).commit());
     }
+
+
 }
