@@ -44,8 +44,8 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="363dp"
-        android:layout_height="45dp"
+        android:layout_width="385dp"
+        android:layout_height="64dp"
         android:layout_marginTop="40dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,43 +55,43 @@
         <CheckBox
             android:id="@+id/sunday"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <CheckBox
             android:id="@+id/monday"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <CheckBox
-            android:id="@+id/monday2"
+            android:id="@+id/tuesday"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <CheckBox
-            android:id="@+id/monday3"
+            android:id="@+id/wednesday"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <CheckBox
-            android:id="@+id/monday4"
+            android:id="@+id/thursday"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <CheckBox
-            android:id="@+id/monday5"
+            android:id="@+id/friday"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <CheckBox
-            android:id="@+id/monday6"
+            android:id="@+id/saturday"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
 
     </LinearLayout>
@@ -100,7 +100,6 @@
         android:id="@+id/tableLayout"
         android:layout_width="388dp"
         android:layout_height="151dp"
-        android:layout_marginTop="20dp"
         android:background="#E3E3E7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.478"
@@ -166,7 +165,7 @@
     </TableLayout>
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/save_button"
         android:layout_width="104dp"
         android:layout_height="64dp"
         android:layout_marginBottom="28dp"
