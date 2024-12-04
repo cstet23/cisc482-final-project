@@ -2,6 +2,6 @@
 a project by:
 [NAME]
 [NAME]
-[NAME]
 Rehan Amir
 bea stetler
+Lily Yan
