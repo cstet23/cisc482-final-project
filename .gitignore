@@ -1,7 +1,10 @@
 # Gradle build directory
 .gradle/
 build/
+build*
+gradle*
 gradle.*
+settings.gradle.kts
 
 # IDE-specific files
 .idea/
