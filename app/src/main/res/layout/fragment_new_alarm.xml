@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_alarm_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:theme="@style/ThemeOverlay.FinalProject.FullscreenContainer"
+    tools:context=".NewAlarm">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+
+    <TimePicker
+        android:id="@+id/timepicker"
+        android:layout_width="413dp"
+        android:layout_height="230dp"
+        android:layout_marginTop="20dp"
+        android:timePickerMode="spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="289dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="122dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="122dp"
+        android:lineSpacingExtra="8sp"
+        android:text="@string/add_alarm_header"
+        android:textAlignment="center"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="385dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timepicker">
+
+        <CheckBox
+            android:id="@+id/sunday"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <CheckBox
+            android:id="@+id/monday"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <CheckBox
+            android:id="@+id/tuesday"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <CheckBox
+            android:id="@+id/wednesday"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <CheckBox
+            android:id="@+id/thursday"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <CheckBox
+            android:id="@+id/friday"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <CheckBox
+            android:id="@+id/saturday"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="388dp"
+        android:layout_height="151dp"
+        android:background="#E3E3E7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <TableRow android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:text="@string/add_alarm_setting_name"
+                android:textSize="30sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="283dp"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:hint="@string/add_alarm_setting_name_hint"
+                    android:textAlignment="textEnd" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </TableRow>
+
+        <TableRow android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="87dp"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:text="@string/add_alarm_setting_tone"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="277dp"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="@string/add_alarm_setting_tone_default"
+                android:textAlignment="textEnd"
+                android:textSize="25sp" />
+        </TableRow>
+
+        <TableRow android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="3dp"
+                android:text="@string/add_alarm_setting_games"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="277dp"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="@string/add_alarm_setting_games_default"
+                android:textAlignment="textEnd"
+                android:textSize="25sp" />
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="104dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="28dp"
+        android:text="@string/add_alarm_save_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/sun_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="@string/weekday_sunday"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/mon_label"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/mon_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/weekday_monday"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/tues_label"
+        app:layout_constraintStart_toEndOf="@+id/sun_label" />
+
+    <TextView
+        android:id="@+id/tues_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/weekday_tuesday"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/wed_label"
+        app:layout_constraintStart_toEndOf="@+id/mon_label" />
+    <TextView
+        android:id="@+id/wed_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/weekday_wednesday"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        tools:layout_editor_absoluteX="192dp"
+        app:layout_constraintEnd_toStartOf="@+id/thurs_label"
+        app:layout_constraintStart_toEndOf="@+id/tues_label"/>
+    <TextView
+        android:id="@+id/thurs_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/weekday_thursday"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        tools:layout_editor_absoluteX="238dp"
+        app:layout_constraintEnd_toStartOf="@+id/fri_label"
+        app:layout_constraintStart_toEndOf="@+id/wed_label"/>
+    <TextView
+        android:id="@+id/fri_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/weekday_friday"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        tools:layout_editor_absoluteX="296dp"
+        app:layout_constraintEnd_toStartOf="@+id/sat_label"
+        app:layout_constraintStart_toEndOf="@+id/thurs_label"/>
+
+    <TextView
+        android:id="@+id/sat_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="@string/weekday_saturday"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fri_label" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

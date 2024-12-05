@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">FinalProject</string>
+    <string name="floating_button_description">Add Alarm</string>
+    <string name="add_alarm_header">Add New Alarm</string>
+    <string name="moreSettingsText">There\'s nothing here for now…\n\nHopefully we\'ll have time to implement a color scheme picker here!\n\nIf you have any other ideas for settings you\'d like to see, please let us know!</string>
+
+    <string name="add_alarm_setting_name">Name</string>
+    <string name="add_alarm_setting_name_hint">(Optional)</string>
+    <string name="add_alarm_setting_repeat">Repeat</string>
+    <string name="add_alarm_setting_tone">Tone</string>
+    <string name="add_alarm_setting_tone_default">Default</string>
+    <string name="add_alarm_setting_games">Games</string>
+    <string name="add_alarm_setting_games_default">Default</string>
+    <string name="add_alarm_save_button">Save</string>
+
+    <string name="weekday_sunday">Su</string>
+    <string name="weekday_monday">M</string>
+    <string name="weekday_tuesday">Tu</string>
+    <string name="weekday_wednesday">W</string>
+    <string name="weekday_thursday">Th</string>
+    <string name="weekday_friday">Fr</string>
+    <string name="weekday_saturday">Sa</string>
+    <string name="settingsLabel">settings</string>
+
 </resources>
