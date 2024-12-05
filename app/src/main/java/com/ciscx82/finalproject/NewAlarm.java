@@ -1,7 +1,5 @@
 package com.ciscx82.finalproject;
 
-
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
