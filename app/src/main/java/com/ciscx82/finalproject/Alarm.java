@@ -1,8 +1,9 @@
 package com.ciscx82.finalproject;
 
 
+import java.io.Serializable;
 
-public class Alarm {
+public class Alarm implements Serializable {
     private String time;
     private String days; // Declare the days variable
 
