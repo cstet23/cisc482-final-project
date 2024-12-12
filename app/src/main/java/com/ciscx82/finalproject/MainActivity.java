@@ -43,7 +43,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarmListener{
 
     private RecyclerView alarmRecyclerView;
-    private FloatingActionButton addButton;
     private AlarmAdapter alarmAdapter;
     private List<Alarm> alarmList;
     private Bundle alarmBundle;
@@ -58,11 +57,10 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
 
         //get passed in content if coming from settings screen
         Intent intent = getIntent();
-        Log.d("intent", String.valueOf(intent));
         alarmBundle = intent.getBundleExtra("ALARM_BUNDLE");
 
         // Initialize views
-        addButton = findViewById(R.id.add_alarm_button);
+        FloatingActionButton addButton = findViewById(R.id.add_alarm_button);
         alarmRecyclerView = findViewById(R.id.alarm_recycler_view);
 
         // Initialize RecyclerView
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
             transaction.commit();
         });
 
-        ImageButton settings = findViewById(R.id.settingsButton);
+        FloatingActionButton settings = findViewById(R.id.settingsButton);
 
         settings.setOnTouchListener((v, event) -> {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {

@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="30dp"
         android:text="Games"
         android:textColor="@color/black"
         android:textSize="36sp"
@@ -19,74 +19,135 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginVertical="80dp">
 
-        <RadioGroup
-            android:id="@+id/includedGames"
-            android:layout_width="0dp"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/includedGamesContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="80dp"
-            android:layout_marginHorizontal="40dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/radioTitle"
+                android:id="@+id/includedGamesTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:text="Included Games"
                 android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <RadioButton
-                android:id="@+id/radioButtonDefaultGames"
+            <RadioGroup
+                android:id="@+id/includedGames"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="All" />
+                android:orientation="vertical"
+                android:layout_margin="10dp"
+                app:layout_constraintTop_toBottomOf="@id/includedGamesTitle">
 
-            <RadioButton
-                android:id="@+id/radioButtonPuzzleGames"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Puzzle Only" />
+                <RadioButton
+                    android:id="@+id/radioButtonDefaultGames"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="All" />
 
-            <RadioButton
-                android:id="@+id/radioButtonGyroGames"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Gyro Controls Only" />
+                <RadioButton
+                    android:id="@+id/radioButtonPuzzleGames"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Puzzle Only" />
 
-            <RadioButton
-                android:id="@+id/radioButtonNoGyroGames"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="No Gyro Controls" />
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/radioButtonGyroGames"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gyro Controls Only" />
 
-        <TextView
-            android:id="@+id/hintTitle"
-            android:layout_width="0dp"
+                <RadioButton
+                    android:id="@+id/radioButtonNoGyroGames"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No Gyro Controls" />
+            </RadioGroup> />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/hintContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hints"
-            android:textStyle="bold"
-            android:textSize="24sp"
-            android:layout_margin="40dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/includedGames" />
+            app:layout_constraintTop_toBottomOf="@id/includedGamesContainer"
+            android:layout_marginTop="20dp">
 
-        <Spinner
-            android:id="@+id/hintsDropdown"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/hintTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hints"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_margin="4dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/hintsDropdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintTop_toBottomOf="@+id/hintTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Skip instead of giving hints?"
+                app:layout_constraintTop_toBottomOf="@id/hintsDropdown"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sensorsContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="20dp"
-            android:layout_marginHorizontal="40dp"
-            android:spinnerMode="dropdown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/hintTitle" />
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/hintContainer">
+
+            <TextView
+                android:id="@+id/sensorsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="Sensors"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/sensorsBlurb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="This feature hasn't been added yet :("
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sensorsTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
