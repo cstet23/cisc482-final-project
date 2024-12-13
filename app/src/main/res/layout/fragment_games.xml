@@ -108,6 +108,7 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <CheckBox
+                android:id="@+id/skipBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Skip instead of giving hints?"

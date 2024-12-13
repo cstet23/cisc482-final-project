@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
     private RecyclerView alarmRecyclerView;
     private AlarmAdapter alarmAdapter;
     private List<Alarm> alarmList;
-    private Bundle alarmBundle;
+    private Bundle dataBundle;
+    private SettingsList settingsList;
 
     @SuppressLint("ClickableViewAccessibility")
     @SuppressWarnings("unchecked")
@@ -57,16 +58,21 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
 
         //get passed in content if coming from settings screen
         Intent intent = getIntent();
-        alarmBundle = intent.getBundleExtra("ALARM_BUNDLE");
+        dataBundle = intent.getBundleExtra("DATA_BUNDLE");
 
         // Initialize views
         FloatingActionButton addButton = findViewById(R.id.add_alarm_button);
         alarmRecyclerView = findViewById(R.id.alarm_recycler_view);
 
         // Initialize RecyclerView
-        if(alarmBundle != null && !(alarmBundle.isEmpty()))
-            alarmList = (ArrayList<Alarm>) alarmBundle.getSerializable("ALARM_LIST");
-        else alarmList = new ArrayList<>();
+        if(dataBundle != null && !(dataBundle.isEmpty())) {
+            alarmList = (ArrayList<Alarm>) dataBundle.getSerializable("ALARM_LIST");
+            settingsList = (SettingsList) dataBundle.getSerializable("SETTINGS_LIST");
+        }
+        else {
+            alarmList = new ArrayList<>();
+            settingsList = new SettingsList();
+        }
         alarmAdapter = new AlarmAdapter(alarmList);
         alarmRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         alarmRecyclerView.setAdapter(alarmAdapter);
@@ -87,9 +93,10 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
         settings.setOnTouchListener((v, event) -> {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                alarmBundle = new Bundle();
-                alarmBundle.putSerializable("ALARM_LIST", (Serializable) alarmList);
-                myIntent.putExtra("ALARM_BUNDLE", alarmBundle);
+                dataBundle = new Bundle();
+                dataBundle.putSerializable("ALARM_LIST", (Serializable) alarmList);
+                dataBundle.putSerializable("SETTINGS_LIST", settingsList);
+                myIntent.putExtra("DATA_BUNDLE", dataBundle);
                 MainActivity.this.startActivity(myIntent);
                 return true;
             }

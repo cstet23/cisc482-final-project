@@ -13,9 +13,15 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class SettingsActivity extends AppCompatActivity {
-    private Bundle alarmBundle;
+import java.io.Serializable;
+import java.util.ArrayList;
 
+public class SettingsActivity extends AppCompatActivity {
+    private Bundle dataBundle;
+    private ArrayList<Alarm> alarmList; //for storage
+    private SettingsList settingsList; //to be accessed
+
+    @SuppressWarnings("unchecked")
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +30,20 @@ public class SettingsActivity extends AppCompatActivity {
 
         //getting the data passed in from main screen
         Intent intent = getIntent();
-        alarmBundle = intent.getBundleExtra("ALARM_BUNDLE");
+        dataBundle = intent.getBundleExtra("DATA_BUNDLE");
+        assert dataBundle != null;
+        alarmList = (ArrayList<Alarm>) dataBundle.getSerializable("ALARM_LIST");
+        settingsList = (SettingsList) dataBundle.getSerializable("SETTINGS_LIST");
 
         ImageButton closeButton = findViewById(R.id.close_settings);
         closeButton.setOnTouchListener((v, event) -> {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 //passing the data back
                 Intent myIntent = new Intent(SettingsActivity.this, MainActivity.class);
-                myIntent.putExtra("ALARM_BUNDLE", alarmBundle);
+                dataBundle = new Bundle();
+                dataBundle.putSerializable("ALARM_LIST", (Serializable) alarmList);
+                dataBundle.putSerializable("SETTINGS_LIST", settingsList);
+                myIntent.putExtra("DATA_BUNDLE", dataBundle);
                 SettingsActivity.this.startActivity(myIntent);
                 return true;
             }
@@ -39,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         //setting up the fragment container
-        SettingsViewPagerAdapter svpAdapter = new SettingsViewPagerAdapter(this);
+        SettingsViewPagerAdapter svpAdapter = new SettingsViewPagerAdapter(this, settingsList);
         ViewPager2 viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(svpAdapter);
 
@@ -75,9 +87,25 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
     }
-    public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
-        item.setChecked(true);
+    public void itemSetChecked(MenuItem checked, MenuItem uc1, MenuItem uc2) {
+        checked.setChecked(true);
         uc1.setChecked(false);
         uc2.setChecked(false);
+    }
+
+    public void setTone(String tone) {
+        settingsList.setTone(tone);
+    }
+    public void setVolume(int vol) {
+        settingsList.setVolume(vol);
+    }
+    public void setGamesSel(String gamesSel) {
+        settingsList.setGamesSel(gamesSel);
+    }
+    public void setHintTime(int hintTime) {
+        settingsList.setHintTime(hintTime);
+    }
+    public void setSkip(boolean skip) {
+        settingsList.setSkip(skip);
     }
 }
