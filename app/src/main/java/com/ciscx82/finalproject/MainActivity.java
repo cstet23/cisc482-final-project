@@ -41,7 +41,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarmListener{
 
     private RecyclerView alarmRecyclerView;
-    private FloatingActionButton addButton;
+    private ImageButton addButton;
     private AlarmAdapter alarmAdapter;
     private List<Alarm> alarmList;
 
