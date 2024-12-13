@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 public class NewAlarm extends Fragment {
 
     private TimePicker timePicker;
-    private Button saveButton;
+    private Button saveButton, cancelButton;
     private NewAlarmListener listener;
 
     // Define an interface for communicating with MainActivity
@@ -39,6 +39,7 @@ public class NewAlarm extends Fragment {
         // Get references to the views
         timePicker = view.findViewById(R.id.timepicker);
         saveButton = view.findViewById(R.id.save_button);
+        cancelButton = view.findViewById(R.id.cancel_button);
 
         // Set listener for save button
         saveButton.setOnClickListener(v -> {
@@ -61,6 +62,13 @@ public class NewAlarm extends Fragment {
                 Log.e("NewAlarm", "Listener is null");
             }
 
+            // Navigate back to the previous fragment (MainPage)
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
+
+
+        // set listener for cancel button
+        cancelButton.setOnClickListener(v -> {
             // Navigate back to the previous fragment (MainPage)
             requireActivity().getSupportFragmentManager().popBackStack();
         });

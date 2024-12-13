@@ -12,6 +12,7 @@
     <string name="add_alarm_setting_games">Games</string>
     <string name="add_alarm_setting_games_default">Default</string>
     <string name="add_alarm_save_button">Save</string>
+    <string name="cancel">Cancel</string>
 
     <string name="weekday_sunday">Su</string>
     <string name="weekday_monday">M</string>
