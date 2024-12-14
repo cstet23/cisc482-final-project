@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +21,6 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor gyroscopeSensor;
     private GameView gameView;
-    private boolean surfaceReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +47,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-
-            // Pass accelerometer values to the game view
+        if (gameView != null && gameView.isSurfaceReady()) {
             gameView.updateBallPosition(event.values[0], event.values[1]);
         }
     }
@@ -59,12 +57,26 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         // No implementation needed
     }
 
+    public void endGame() {
+        Log.d("GyroGame", "Game Over: Ball reached the goal!");
+        runOnUiThread(() -> {
+            // Show a toast message
+            Toast.makeText(this, "You Win!", Toast.LENGTH_LONG).show();
+
+            // Close the activity
+            finish();
+        });
+    }
+
+
     // Inner class for the game view
     private class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         private Ball ball;
         private Paint paint;
         private Maze maze;
+        private Goal goal;
+        private boolean surfaceReady = false;
 
         public GameView(Context context) {
             super(context);
@@ -72,6 +84,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             paint = new Paint();
             ball = new Ball(100, 100, 20); // Ball with initial position and radius
             maze = new Maze(); // Initialize the maze
+            goal = new Goal(500, 500, 20); // Goal position
         }
 
         @Override
@@ -91,6 +104,10 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             surfaceReady = false;
         }
 
+        public boolean isSurfaceReady() {
+            return surfaceReady;
+        }
+
         private void drawGame(SurfaceHolder holder) {
             Canvas canvas = holder.lockCanvas();
             if (canvas != null) {
@@ -101,9 +118,11 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
                     // Draw maze
                     maze.draw(canvas, paint);
 
+                    // Draw goal
+                    goal.draw(canvas, paint);
+
                     // Draw ball
-                    paint.setColor(Color.RED);
-                    canvas.drawCircle(ball.x, ball.y, ball.radius, paint);
+                    ball.draw(canvas, paint);
                 } finally {
                     holder.unlockCanvasAndPost(canvas);
                 }
@@ -118,6 +137,14 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             float previousY = ball.y;
 
             ball.update(tiltX, tiltY, getWidth(), getHeight(), maze);
+
+            // Check if ball reached the goal
+            if (goal.isBallInside(ball.x, ball.y, ball.radius)) {
+                Log.d("GameView", "Goal Reached!");
+                // End the game
+                ((GyroGame) getContext()).endGame();
+                return;
+            }
 
             // Only redraw if the ball has moved significantly to prevent crashes
             if (Math.abs(ball.x - previousX) > 1 || Math.abs(ball.y - previousY) > 1) {
@@ -137,6 +164,11 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             this.radius = radius;
         }
 
+        public void draw(Canvas canvas, Paint paint) {
+            paint.setColor(Color.RED);
+            canvas.drawCircle(x, y, radius, paint);
+        }
+
         public void update(float tiltX, float tiltY, int screenWidth, int screenHeight, Maze maze) {
             // Update position based on tilt
             x -= tiltX * 5; // Adjust sensitivity by multiplying tilt values
@@ -147,9 +179,9 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             y = Math.max(radius, Math.min(screenHeight - radius, y));
 
             // Check for collisions with maze walls (Not yet implemented)
-            if (maze.collidesWithWall(x, y, radius)) {
-                // Handle collision reaction
-            }
+//            if (maze.collidesWithWall(x, y, radius)) {
+//                // Handle collision reaction
+//            }
         }
     }
 
@@ -179,6 +211,26 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             }
             Log.d("Collision", "No collision detected");
             return false; // No collision
+        }
+    }
+
+    private class Goal {
+        float x, y, size;
+
+        public Goal(float x, float y, float size) {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+        }
+
+        public void draw(Canvas canvas, Paint paint) {
+            paint.setColor(Color.GREEN);
+            canvas.drawRect(x, y, x + size, y + size, paint);
+        }
+
+        public boolean isBallInside(float ballX, float ballY, float ballRadius) {
+            return ballX + ballRadius > x && ballX - ballRadius < x + size &&
+                    ballY + ballRadius > y && ballY - ballRadius < y + size;
         }
     }
 }
