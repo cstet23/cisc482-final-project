@@ -82,7 +82,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             super(context);
             getHolder().addCallback(this);
             paint = new Paint();
-            ball = new Ball(100, 100, 20); // Ball with initial position and radius
+            ball = new Ball(250, 250, 20); // Ball with initial position and radius
             maze = new Maze(); // Initialize the maze
             goal = new Goal(500, 500, 20); // Goal position
         }
@@ -112,7 +112,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             Canvas canvas = holder.lockCanvas();
             if (canvas != null) {
                 try {
-                    Log.d("GameView", "Drawing Game");
+                    //Log.d("GameView", "Drawing Game");
                     canvas.drawColor(Color.WHITE);
 
                     // Draw maze
@@ -179,9 +179,11 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             y = Math.max(radius, Math.min(screenHeight - radius, y));
 
             // Check for collisions with maze walls (Not yet implemented)
-//            if (maze.collidesWithWall(x, y, radius)) {
-//                // Handle collision reaction
-//            }
+            if (maze.collidesWithWall(x, y, radius)) {
+                // Handle collision reaction
+                x += tiltX * 5;
+                y -= tiltY * 5;
+            }
         }
     }
 
@@ -205,11 +207,11 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             float bottom = 500;
 
             // Check for collision with walls
-            if (x - radius < left || x + radius > right || y - radius < top || y + radius > bottom) {
-                Log.d("Collision", "Collision detected");
+            if ((x - radius < left) || (x + radius > right) || (y - radius < top) || (y + radius > bottom)) {
+                //Log.d("Collision", "Collision detected");
                 return true; // Collision detected
             }
-            Log.d("Collision", "No collision detected");
+            //Log.d("Collision", "No collision detected");
             return false; // No collision
         }
     }
