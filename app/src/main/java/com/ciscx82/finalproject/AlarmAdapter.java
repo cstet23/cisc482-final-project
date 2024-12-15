@@ -21,6 +21,13 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         this.alarmList = alarmList;
     }
 
+    // Method to update alarms
+    public void updateAlarms(List<Alarm> newAlarms) {
+        alarmList.clear();
+        alarmList.addAll(newAlarms);
+        notifyDataSetChanged(); // Notify the adapter that data has changed
+    }
+
     @NonNull
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
