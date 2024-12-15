@@ -1,34 +1,15 @@
 package com.ciscx82.finalproject;
 
-import static android.app.PendingIntent.FLAG_IMMUTABLE;
-
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.Toast;
 
 import android.content.SharedPreferences;
+
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,79 +18,29 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import com.google.android.material.navigation.NavigationView;
-
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat; // Added import for ContextCompat
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+// Added import for ContextCompat
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.ItemTouchHelper; // Added import
-import androidx.recyclerview.widget.RecyclerView;
+// Added import
 
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import android.graphics.Canvas; // Added import
-import androidx.core.view.WindowInsetsCompat;
-import android.app.AlertDialog; // Added import
-import android.content.DialogInterface; // Added import
-import androidx.viewpager2.widget.ViewPager2;
-import android.content.SharedPreferences;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.content.DialogInterface;
-import android.app.AlertDialog;
+// Added import
+// Added import
+// Added import
 import java.lang.reflect.Type;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
-
-import com.google.android.material.navigation.NavigationView;
-
-
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.viewpager2.widget.ViewPager2;
-
-import com.google.android.material.navigation.NavigationView;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarmListener{
