@@ -1,6 +1,12 @@
 package com.ciscx82.finalproject;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,6 +24,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -36,9 +43,10 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarmListener{
+public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarmListener {
 
     private RecyclerView alarmRecyclerView;
     private ImageButton addButton;
@@ -81,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
 
         ImageButton settings = findViewById(R.id.settingsButton);
 
-
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View settingsView = inflater.inflate(R.layout.settings_popup, null);
         int vWidth = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -89,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
 
         settings.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     settingsWindow = new PopupWindow(settingsView, vWidth, vHeight);
                     settingsWindow.showAtLocation(main, Gravity.CENTER, 0, 0);
 
@@ -97,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
                     closeButton.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                            if (event.getAction() == MotionEvent.ACTION_DOWN) {
                                 settingsWindow.dismiss();
                                 return true;
                             }
@@ -118,9 +125,11 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
                         @Override
                         public void onPageSelected(int position) {
                             //super.onPageSelected(position);
-                            if(position == 0) itemSetChecked(alarmButton, gamesButton, moreButton);
-                            else if (position == 1) itemSetChecked(gamesButton, alarmButton, moreButton);
-                            else if (position == 2) itemSetChecked(moreButton, alarmButton, gamesButton);
+                            if (position == 0) itemSetChecked(alarmButton, gamesButton, moreButton);
+                            else if (position == 1)
+                                itemSetChecked(gamesButton, alarmButton, moreButton);
+                            else if (position == 2)
+                                itemSetChecked(moreButton, alarmButton, gamesButton);
                         }
                     });
 
@@ -155,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
         });
     }
 
+
     public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
         item.setChecked(true);
         uc1.setChecked(false);
@@ -176,4 +186,5 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
         // Scroll to the bottom to show the newly added alarm
         alarmRecyclerView.scrollToPosition(alarmList.size() - 1);
     }
+
 }
