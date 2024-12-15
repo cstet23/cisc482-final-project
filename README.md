@@ -49,3 +49,9 @@ This app is particularly useful for students who struggle with waking up on time
 - bea stetler
 - Lily Yan
 - Mercedes Mathews
+
+
+### Sources
+- Android with Haroon: [Simple Alarm App (Timepicker) using Android Studio Tutorial](https://www.youtube.com/watch?v=tsw7PlSauF0&ab_channel=AndroidwithHaroon)
+- Geeks for Geek: [How to Build a Simple Alarm Setter App in Android?](https://www.geeksforgeeks.org/how-to-build-a-simple-alarm-setter-app-in-android)
+- Android Develoeprs Resources for [Alarms](https://developer.android.com/develop/background-work/services/alarms)
