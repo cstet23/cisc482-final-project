@@ -1,6 +1,7 @@
 package com.ciscx82.finalproject;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -35,32 +36,43 @@ import com.google.android.material.navigation.NavigationView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarmListener{
 
     private RecyclerView alarmRecyclerView;
-    private FloatingActionButton addButton;
     private AlarmAdapter alarmAdapter;
     private List<Alarm> alarmList;
-
-    private SettingsViewPagerAdapter svpAdapter;
-    private PopupWindow settingsWindow;
+    private Bundle dataBundle;
+    private SettingsList settingsList;
 
     @SuppressLint("ClickableViewAccessibility")
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        //get passed in content if coming from settings screen
+        Intent intent = getIntent();
+        dataBundle = intent.getBundleExtra("DATA_BUNDLE");
+
         // Initialize views
-        addButton = findViewById(R.id.add_alarm_button);
+        FloatingActionButton addButton = findViewById(R.id.add_alarm_button);
         alarmRecyclerView = findViewById(R.id.alarm_recycler_view);
 
         // Initialize RecyclerView
-        alarmList = new ArrayList<>();
+        if(dataBundle != null && !(dataBundle.isEmpty())) {
+            alarmList = (ArrayList<Alarm>) dataBundle.getSerializable("ALARM_LIST");
+            settingsList = (SettingsList) dataBundle.getSerializable("SETTINGS_LIST");
+        }
+        else {
+            alarmList = new ArrayList<>();
+            settingsList = new SettingsList();
+        }
         alarmAdapter = new AlarmAdapter(alarmList);
         alarmRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         alarmRecyclerView.setAdapter(alarmAdapter);
@@ -76,89 +88,20 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
             transaction.commit();
         });
 
-        svpAdapter = new SettingsViewPagerAdapter(this);
-        var main = findViewById(R.id.main);
+        FloatingActionButton settings = findViewById(R.id.settingsButton);
 
-        ImageButton settings = findViewById(R.id.settingsButton);
-
-
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View settingsView = inflater.inflate(R.layout.settings_popup, null);
-        int vWidth = LinearLayout.LayoutParams.MATCH_PARENT;
-        int vHeight = LinearLayout.LayoutParams.MATCH_PARENT;
-
-        settings.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                    settingsWindow = new PopupWindow(settingsView, vWidth, vHeight);
-                    settingsWindow.showAtLocation(main, Gravity.CENTER, 0, 0);
-
-                    ImageButton closeButton = settingsView.findViewById(R.id.close_settings);
-                    closeButton.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                                settingsWindow.dismiss();
-                                return true;
-                            }
-                            return false;
-                        }
-                    });
-
-                    ViewPager2 viewPager = settingsView.findViewById(R.id.view_pager);
-                    viewPager.setAdapter(svpAdapter);
-
-                    Menu settingsMenu = ((NavigationView) settingsView.findViewById(R.id.settings_options)).getMenu();
-
-                    var alarmButton = settingsMenu.findItem(R.id.alarms_cat);
-                    var gamesButton = settingsMenu.findItem(R.id.games_cat);
-                    var moreButton = settingsMenu.findItem(R.id.more_cat);
-
-                    viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                        @Override
-                        public void onPageSelected(int position) {
-                            //super.onPageSelected(position);
-                            if(position == 0) itemSetChecked(alarmButton, gamesButton, moreButton);
-                            else if (position == 1) itemSetChecked(gamesButton, alarmButton, moreButton);
-                            else if (position == 2) itemSetChecked(moreButton, alarmButton, gamesButton);
-                        }
-                    });
-
-                    alarmButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(@NonNull MenuItem item) {
-                            viewPager.setCurrentItem(0);
-                            return true;
-                        }
-                    });
-
-                    gamesButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(@NonNull MenuItem item) {
-                            viewPager.setCurrentItem(1);
-                            return true;
-                        }
-                    });
-
-                    moreButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(@NonNull MenuItem item) {
-                            viewPager.setCurrentItem(2);
-                            return true;
-                        }
-                    });
-
-                    return true;
-                }
-                return false;
+        settings.setOnTouchListener((v, event) -> {
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                dataBundle = new Bundle();
+                dataBundle.putSerializable("ALARM_LIST", (Serializable) alarmList);
+                dataBundle.putSerializable("SETTINGS_LIST", settingsList);
+                myIntent.putExtra("DATA_BUNDLE", dataBundle);
+                MainActivity.this.startActivity(myIntent);
+                return true;
             }
+            return false;
         });
-    }
-
-    public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
-        item.setChecked(true);
-        uc1.setChecked(false);
-        uc2.setChecked(false);
     }
 
     // Implementing the onNewAlarmCreated method

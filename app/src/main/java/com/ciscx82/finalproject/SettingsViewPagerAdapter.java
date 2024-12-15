@@ -10,17 +10,27 @@ import com.ciscx82.finalproject.fragments.gamesFragment;
 import com.ciscx82.finalproject.fragments.moreFragment;
 
 public class SettingsViewPagerAdapter extends FragmentStateAdapter {
-    public SettingsViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    private String tone, gamesSel;
+    private int volume, hintTime;
+    private boolean skip;
+    public SettingsViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, SettingsList settingsList) {
         super(fragmentActivity);
+        //structure: tone, volume, gamesSel, hintTime, skip
+
+        this.tone = settingsList.getTone();
+        this.volume = settingsList.getVolume();
+        this.gamesSel = settingsList.getGamesSel();
+        this.hintTime = settingsList.getHintTime();
+        this.skip = settingsList.isSkip();
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         switch(position) {
-            case 1: return new gamesFragment();
+            case 1: return new gamesFragment(gamesSel, hintTime, skip);
             case 2: return new moreFragment();
-            default: return new alarmsFragment();
+            default: return new alarmsFragment(tone, volume);
         }
     }
 
