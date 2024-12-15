@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,6 +16,9 @@ import android.view.SurfaceView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GyroGame extends AppCompatActivity implements SensorEventListener {
 
@@ -48,9 +52,14 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (gameView != null && gameView.isSurfaceReady()) {
-            gameView.updateBallPosition(event.values[0], event.values[1]);
+            float tiltX = event.values[0];
+            float tiltY = event.values[1];
+
+            // Pass values to gameView for processing
+            gameView.post(() -> gameView.updateBallPosition(tiltX, tiltY));
         }
     }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -63,7 +72,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             // Show a toast message
             Toast.makeText(this, "You Win!", Toast.LENGTH_LONG).show();
 
-            // Close the activity
+            // Close game
             finish();
         });
     }
@@ -82,9 +91,9 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             super(context);
             getHolder().addCallback(this);
             paint = new Paint();
-            ball = new Ball(250, 250, 20); // Ball with initial position and radius
+            ball = new Ball(100, 100, 20); // Ball with initial position and radius
             maze = new Maze(); // Initialize the maze
-            goal = new Goal(500, 500, 20); // Goal position
+            goal = new Goal(800, 1900, 20); // Goal position
         }
 
         @Override
@@ -100,7 +109,6 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
-            Log.d("GameView", "Surface Destroyed");
             surfaceReady = false;
         }
 
@@ -126,8 +134,6 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
                 } finally {
                     holder.unlockCanvasAndPost(canvas);
                 }
-            } else {
-                Log.w("GameView", "Canvas is null, skipping draw");
             }
         }
 
@@ -147,7 +153,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             }
 
             // Only redraw if the ball has moved significantly to prevent crashes
-            if (Math.abs(ball.x - previousX) > 1 || Math.abs(ball.y - previousY) > 1) {
+            if (Math.abs(ball.x - previousX) > 0.5 || Math.abs(ball.y - previousY) > 0.5) {
                 drawGame(getHolder());
             }
         }
@@ -170,51 +176,59 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         }
 
         public void update(float tiltX, float tiltY, int screenWidth, int screenHeight, Maze maze) {
-            // Update position based on tilt
-            x -= tiltX * 5; // Adjust sensitivity by multiplying tilt values
-            y += tiltY * 5;
+            float newX = x - tiltX * 5; // Calculate new X position
+            float newY = y + tiltY * 5; // Calculate new Y position
 
-            // Keep the ball within screen bounds
-            x = Math.max(radius, Math.min(screenWidth - radius, x));
-            y = Math.max(radius, Math.min(screenHeight - radius, y));
+            // Check for collisions with walls before updating position
+            if (!maze.collidesWithWall(newX, y, radius)) {
+                x = Math.max(radius, Math.min(screenWidth - radius, newX)); // Update X if no collision
+            }
 
-            // Check for collisions with maze walls (Not yet implemented)
-            if (maze.collidesWithWall(x, y, radius)) {
-                // Handle collision reaction
-                x += tiltX * 5;
-                y -= tiltY * 5;
+            if (!maze.collidesWithWall(x, newY, radius)) {
+                y = Math.max(radius, Math.min(screenHeight - radius, newY)); // Update Y if no collision
             }
         }
+
     }
 
     // Maze class
     private class Maze {
+        private List<RectF> walls;
+
+        public Maze() {
+            walls = new ArrayList<>();
+
+            // Define the maze walls as rectangles
+            walls.add(new RectF(0, 700, 700, 710)); // Horizontal wall
+            walls.add(new RectF(490, 0, 500, 500)); // Vertical wall
+            walls.add(new RectF(200, 490, 500, 500)); // Horizontal wall
+            walls.add(new RectF(200, 0, 210, 500)); // Vertical wall
+            walls.add(new RectF(700, 700, 710, 2000));
+            walls.add(new RectF(900, 0, 910, 900));
+            walls.add(new RectF(900, 900, 1100, 910));
+            walls.add(new RectF(900, 1100, 1100, 1110));
+            walls.add(new RectF(900, 1100, 910, 2000));
+        }
+
         public void draw(Canvas canvas, Paint paint) {
             paint.setColor(Color.BLACK);
-            paint.setStrokeWidth(10);
-            // Example walls
-            canvas.drawLine(200, 200, 500, 200, paint);
-            canvas.drawLine(500, 200, 500, 500, paint);
-            canvas.drawLine(500, 500, 200, 500, paint);
-            canvas.drawLine(200, 500, 200, 200, paint);
+            for (RectF wall : walls) {
+                canvas.drawRect(wall, paint); // Draw each wall as a rectangle
+            }
         }
 
         public boolean collidesWithWall(float x, float y, float radius) {
-            // Wall positions
-            float left = 200;
-            float top = 200;
-            float right = 500;
-            float bottom = 500;
-
-            // Check for collision with walls
-            if ((x - radius < left) || (x + radius > right) || (y - radius < top) || (y + radius > bottom)) {
-                //Log.d("Collision", "Collision detected");
-                return true; // Collision detected
+            for (RectF wall : walls) {
+                // Check if the ball intersects with any wall
+                if ((x + radius > wall.left) && (x - radius < wall.right) && (y + radius > wall.top) && (y - radius < wall.bottom)) {
+                    //Log.d("Collision", "Collision with wall: " + wall.toString());
+                    return true; // Collision detected
+                }
             }
-            //Log.d("Collision", "No collision detected");
             return false; // No collision
         }
     }
+
 
     private class Goal {
         float x, y, size;
