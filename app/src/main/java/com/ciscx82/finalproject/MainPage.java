@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +21,7 @@ import java.util.List;
 public class MainPage extends Fragment {
 
     private RecyclerView alarmRecyclerView;
-    private FloatingActionButton addButton;
+    private ImageButton addButton;
     private AlarmAdapter alarmAdapter;
     private List<Alarm> alarmList;
 
