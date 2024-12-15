@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainPage extends Fragment {
@@ -44,8 +45,12 @@ public class MainPage extends Fragment {
         // Set listener for the add button to open the SetAlarmFragment
         addButton.setOnClickListener(v -> {
             NewAlarm newAlarmFragment = new NewAlarm();
-            newAlarmFragment.setNewAlarmListener((String time, String days) -> {
+            newAlarmFragment.setNewAlarmListener((String time, List<String> days) -> {
                 // Create a new Alarm object with the provided time and days and add it to the list
+                // Convert days from String to List<String>
+
+               // List<String> daysList = Arrays.asList(days.split(", "));
+
                 Alarm newAlarm = new Alarm(time, days);
                 alarmList.add(newAlarm);
                 alarmAdapter.notifyItemInserted(alarmList.size() - 1);
