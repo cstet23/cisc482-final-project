@@ -1,12 +1,26 @@
 package com.ciscx82.finalproject;
 
 
-<<<<<<< Updated upstream
+import android.annotation.SuppressLint;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
-=======
 import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -46,14 +60,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat; // Added import for ContextCompat
->>>>>>> Stashed changes
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper; // Added import
 import androidx.recyclerview.widget.RecyclerView;
-<<<<<<< Updated upstream
-=======
+
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import android.graphics.Canvas; // Added import
@@ -76,26 +92,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
->>>>>>> Stashed changes
+
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.navigation.NavigationView;
+
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarmListener {
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
+public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarmListener{
 
     private RecyclerView alarmRecyclerView;
     private ImageButton addButton;
     private AlarmAdapter alarmAdapter;
     private List<Alarm> alarmList;
 
-<<<<<<< Updated upstream
-=======
     private SettingsViewPagerAdapter svpAdapter;
     private PopupWindow settingsWindow;
 
@@ -105,17 +123,15 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
     private CustomClockView customClockView; // Reference to the CustomClockView
 
     @SuppressLint("ClickableViewAccessibility")
->>>>>>> Stashed changes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this); // Assuming EdgeToEdge is a utility class you've implemented
         setContentView(R.layout.activity_main);
-
 
         // Initialize views
         addButton = findViewById(R.id.add_alarm_button);
         alarmRecyclerView = findViewById(R.id.alarm_recycler_view);
-
         customClockView = findViewById(R.id.custom_clock_view); // Initialize the clock
 
         // Optionally, set a click listener on the clock
@@ -146,22 +162,19 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
             transaction.addToBackStack(null);
             transaction.commit();
         });
-<<<<<<< Updated upstream
-=======
 
-        // Initialize SharedPreferences and Gson if persisting alarms
+        // Initialize SharedPreferences and Gson for persistence
         sharedPreferences = getSharedPreferences("alarms_prefs", MODE_PRIVATE);
         gson = new Gson();
 
         // Load saved alarms
         loadAlarms();
 
-
+        // Initialize Settings ViewPager Adapter
         svpAdapter = new SettingsViewPagerAdapter(this);
         ConstraintLayout main = findViewById(R.id.main); // Use explicit type
 
         ImageButton settings = findViewById(R.id.settingsButton);
-
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View settingsView = inflater.inflate(R.layout.settings_popup, null);
@@ -170,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
 
         settings.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
                     settingsWindow = new PopupWindow(settingsView, vWidth, vHeight);
                     settingsWindow.showAtLocation(main, Gravity.CENTER, 0, 0);
 
@@ -178,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
                     closeButton.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            if(event.getAction() == MotionEvent.ACTION_DOWN) {
                                 settingsWindow.dismiss();
                                 return true;
                             }
@@ -191,19 +204,16 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
 
                     Menu settingsMenu = ((NavigationView) settingsView.findViewById(R.id.settings_options)).getMenu();
 
-                    var alarmButton = settingsMenu.findItem(R.id.alarms_cat);
-                    var gamesButton = settingsMenu.findItem(R.id.games_cat);
-                    var moreButton = settingsMenu.findItem(R.id.more_cat);
+                    MenuItem alarmButton = settingsMenu.findItem(R.id.alarms_cat);
+                    MenuItem gamesButton = settingsMenu.findItem(R.id.games_cat);
+                    MenuItem moreButton = settingsMenu.findItem(R.id.more_cat);
 
                     viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                         @Override
                         public void onPageSelected(int position) {
-                            //super.onPageSelected(position);
-                            if (position == 0) itemSetChecked(alarmButton, gamesButton, moreButton);
-                            else if (position == 1)
-                                itemSetChecked(gamesButton, alarmButton, moreButton);
-                            else if (position == 2)
-                                itemSetChecked(moreButton, alarmButton, gamesButton);
+                            if(position == 0) itemSetChecked(alarmButton, gamesButton, moreButton);
+                            else if (position == 1) itemSetChecked(gamesButton, alarmButton, moreButton);
+                            else if (position == 2) itemSetChecked(moreButton, alarmButton, gamesButton);
                         }
                     });
 
@@ -237,23 +247,19 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
             }
         });
 
-        // Add the following line to set up swipe functionality
+        // Set up swipe functionality without the library
         setupRecyclerViewSwipe();
 
-
-    // Update the clock view with the current alarms
+        // Update the clock view with the current alarms
         customClockView.setAlarms(alarmList);
-}
+    }
 
-
-public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
+    public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
         item.setChecked(true);
         uc1.setChecked(false);
         uc2.setChecked(false);
->>>>>>> Stashed changes
     }
 
-    // Add the following method to set up swipe functionality
     // Method to set up swipe functionality manually
     private void setupRecyclerViewSwipe() {
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -261,7 +267,7 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
             public boolean onMove(@NonNull RecyclerView recyclerView,
                                   @NonNull RecyclerView.ViewHolder viewHolder,
                                   @NonNull RecyclerView.ViewHolder target) {
-
+                // We are not supporting move in this example
                 return false;
             }
 
@@ -280,16 +286,19 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
             }
 
             @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
-                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                    int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(@NonNull Canvas c,
+                                    @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY,
+                                    int actionState,
+                                    boolean isCurrentlyActive) {
                 // Define colors and icons
                 ColorDrawable deleteBackground = new ColorDrawable(Color.RED);
                 ColorDrawable modifyBackground = new ColorDrawable(Color.GREEN);
                 Drawable deleteIcon = ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_delete);
                 Drawable modifyIcon = ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_modify);
 
-                int iconMargin = (viewHolder.itemView.getHeight() - (deleteIcon.getIntrinsicHeight())) / 2;
+                int iconMargin = (viewHolder.itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
                 int iconTop = viewHolder.itemView.getTop() + (viewHolder.itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
                 int iconBottom = iconTop + deleteIcon.getIntrinsicHeight();
 
@@ -298,7 +307,7 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
                     int iconRight = iconLeft + modifyIcon.getIntrinsicWidth();
                     int iconTopModify = iconTop;
                     int iconBottomModify = iconBottom;
-                    modifyIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                    modifyIcon.setBounds(iconLeft, iconTopModify, iconRight, iconBottomModify);
                     modifyBackground.setBounds(viewHolder.itemView.getLeft(), viewHolder.itemView.getTop(),
                             viewHolder.itemView.getLeft() + ((int) dX), viewHolder.itemView.getBottom());
                     modifyBackground.draw(c);
@@ -326,7 +335,7 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
         itemTouchHelper.attachToRecyclerView(alarmRecyclerView);
     }
 
-    // Add the following method to confirm deletion of an alarm
+    // Method to confirm deletion of an alarm
     private void confirmDeleteAlarm(int position) {
         new AlertDialog.Builder(this)
                 .setTitle("Delete Alarm")
@@ -335,7 +344,6 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
                     public void onClick(DialogInterface dialog, int which) {
                         // Remove the alarm from the list
                         alarmList.remove(position);
-
                         Log.d("MainActivity", "Alarm removed at position: " + position);
                         Log.d("MainActivity", "Total alarms after removal: " + alarmList.size());
 
@@ -345,7 +353,8 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
                         // Update the clock view with the new alarm list
                         customClockView.setAlarms(alarmList);
 
-                        saveAlarms(); // Save changes if you're persisting alarms
+                        // Save the updated list
+                        saveAlarms();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -359,7 +368,7 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
                 .show();
     }
 
-    // method to modify an existing alarm
+    // Method to modify an existing alarm
     private void modifyAlarm(int position) {
         Alarm alarmToModify = alarmList.get(position);
 
@@ -371,8 +380,6 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
                 // Update the alarm in the list
                 alarmToModify.setTime(time);
                 alarmToModify.setDays(days);
-                //alarmAdapter.notifyItemChanged(position);
-
                 Log.d("MainActivity", "Alarm modified at position: " + position);
                 Log.d("MainActivity", "New time: " + time + ", New days: " + days);
 
@@ -381,7 +388,9 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
 
                 // Update the clock view with the new alarm list
                 customClockView.setAlarms(alarmList);
-                saveAlarms(); // Save changes if you're persisting alarms
+
+                // Save changes
+                saveAlarms();
             }
         });
 
@@ -411,10 +420,8 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
         alarmList.add(newAlarm);
         Log.d("MainActivity", "Alarm added. Total alarms: " + alarmList.size());
 
-
-        // Filter and update the adapter
+        // Update the adapter with the new list
         alarmAdapter.updateAlarms(alarmList);
-       // alarmAdapter.updateAlarms(filterAlarmsForToday(alarmList));
 
         // Update the clock view with the new alarm list
         customClockView.setAlarms(alarmList);
@@ -425,11 +432,8 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
         // Save alarms after adding a new one
         saveAlarms();
     }
-<<<<<<< Updated upstream
-}
-=======
 
-    // Add the following methods to save and load alarms using SharedPreferences
+    // Method to save alarms using SharedPreferences
     private void saveAlarms() {
         String json = gson.toJson(alarmList);
         sharedPreferences.edit().putString("alarms", json).apply();
@@ -444,7 +448,6 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
             alarmList = gson.fromJson(json, type);
             Log.d("MainActivity", "Alarms loaded from SharedPreferences. Total alarms: " + alarmList.size());
             alarmAdapter.updateAlarms(alarmList);
-
             // Update the clock view with the loaded alarms
             customClockView.setAlarms(alarmList);
         } else {
@@ -461,6 +464,4 @@ public void itemSetChecked(MenuItem item, MenuItem uc1, MenuItem uc2) {
         }
         return filteredAlarms;
     }
-
 }
->>>>>>> Stashed changes

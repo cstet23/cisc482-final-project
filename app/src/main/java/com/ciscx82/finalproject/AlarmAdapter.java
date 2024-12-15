@@ -1,11 +1,11 @@
 package com.ciscx82.finalproject;
 
 
+// AlarmAdapter.java
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +17,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
     private List<Alarm> alarmList;
 
+    // Constructor
     public AlarmAdapter(List<Alarm> alarmList) {
         this.alarmList = alarmList;
     }
@@ -31,14 +32,18 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     @NonNull
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.alarm_item, parent, false);
+        // Inflate the alarm item layout
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.alarm_item, parent, false);
         return new AlarmViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
+        // Bind alarm data to the ViewHolder
         Alarm alarm = alarmList.get(position);
-        holder.bind(alarm);
+        holder.timeTextView.setText(alarm.getTime());
+        holder.daysTextView.setText(alarm.getDays());
     }
 
     @Override
@@ -46,24 +51,15 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         return alarmList.size();
     }
 
-    static class AlarmViewHolder extends RecyclerView.ViewHolder {
-
+    // ViewHolder class
+    public static class AlarmViewHolder extends RecyclerView.ViewHolder {
         TextView timeTextView;
         TextView daysTextView;
-        Switch alarmSwitch;
 
         public AlarmViewHolder(@NonNull View itemView) {
             super(itemView);
             timeTextView = itemView.findViewById(R.id.alarm_time);
             daysTextView = itemView.findViewById(R.id.alarm_days);
-            alarmSwitch = itemView.findViewById(R.id.alarm_switch);
-        }
-
-        public void bind(Alarm alarm) {
-            timeTextView.setText(alarm.getTime());
-            daysTextView.setText(alarm.getDays());
-            // Assume alarm is enabled by default
-            alarmSwitch.setChecked(true);
         }
     }
 }

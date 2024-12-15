@@ -1,6 +1,6 @@
 package com.ciscx82.finalproject;
 
-
+// NewAlarm.java
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +14,9 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import java.util.Arrays;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NewAlarm extends Fragment {
@@ -28,7 +29,7 @@ public class NewAlarm extends Fragment {
 
     // Define an interface for communicating with MainActivity
     public interface NewAlarmListener {
-        void onNewAlarmCreated(String time , List<String> days);  // Updated to take both time and days as Strings
+        void onNewAlarmCreated(String time, List<String> days);
     }
 
     public void setNewAlarmListener(NewAlarmListener listener) {
@@ -38,6 +39,7 @@ public class NewAlarm extends Fragment {
     public NewAlarm() {
         super(R.layout.fragment_new_alarm);
     }
+
     // Call this method when a new alarm is created
     private void createNewAlarm(String time, List<String> days) {
         if (listener != null) {
@@ -55,14 +57,13 @@ public class NewAlarm extends Fragment {
         saveButton = view.findViewById(R.id.save_button);
 
         // Get references to day CheckBoxes
-        CheckBox monday = view.findViewById(R.id.monday);
-        CheckBox tuesday = view.findViewById(R.id.tuesday);
-        CheckBox wednesday = view.findViewById(R.id.wednesday);
-        CheckBox thursday = view.findViewById(R.id.thursday);
-        CheckBox friday = view.findViewById(R.id.friday);
-        CheckBox saturday = view.findViewById(R.id.saturday);
-        CheckBox sunday = view.findViewById(R.id.sunday);
-
+        monday = view.findViewById(R.id.monday);
+        tuesday = view.findViewById(R.id.tuesday);
+        wednesday = view.findViewById(R.id.wednesday);
+        thursday = view.findViewById(R.id.thursday);
+        friday = view.findViewById(R.id.friday);
+        saturday = view.findViewById(R.id.saturday);
+        sunday = view.findViewById(R.id.sunday);
 
         // Check if there are arguments passed for modifying an existing alarm
         if (getArguments() != null) {
@@ -89,12 +90,6 @@ public class NewAlarm extends Fragment {
                 saturday.setChecked(false);
                 sunday.setChecked(false);
 
-<<<<<<< Updated upstream
-        return view;
-    }
-}
-=======
-
                 // Check the days that were previously selected
                 for (String day : existingDays) {
                     switch (day) {
@@ -119,55 +114,51 @@ public class NewAlarm extends Fragment {
                         case "Sun":
                             sunday.setChecked(true);
                             break;
+                        default:
+                            // Handle "Once" or other cases if necessary
+                            break;
                     }
                 }
             }
         }
-            // Set listener for save button
-            saveButton.setOnClickListener(v -> {
-                // Log the Save button click
-                Log.d("NewAlarm", "Save button clicked");
 
-                // Get the selected time from the TimePicker
-                int hour = timePicker.getHour();
-                int minute = timePicker.getMinute();
-                String time = String.format("%02d:%02d", hour, minute);
+        // Set listener for save button
+        saveButton.setOnClickListener(v -> {
+            // Log the Save button click
+            Log.d("NewAlarm", "Save button clicked");
 
+            // Get the selected time from the TimePicker
+            int hour = timePicker.getHour();
+            int minute = timePicker.getMinute();
+            String time = String.format("%02d:%02d", hour, minute);
 
-// Collect selected days
-                List<String> selectedDays = new ArrayList<>();
-                if (monday.isChecked()) selectedDays.add("Mon");
-                if (tuesday.isChecked()) selectedDays.add("Tue");
-                if (wednesday.isChecked()) selectedDays.add("Wed");
-                if (thursday.isChecked()) selectedDays.add("Thu");
-                if (friday.isChecked()) selectedDays.add("Fri");
-                if (saturday.isChecked()) selectedDays.add("Sat");
-                if (sunday.isChecked()) selectedDays.add("Sun");
+            // Collect selected days
+            List<String> selectedDays = new ArrayList<>();
+            if (monday.isChecked()) selectedDays.add("Mon");
+            if (tuesday.isChecked()) selectedDays.add("Tue");
+            if (wednesday.isChecked()) selectedDays.add("Wed");
+            if (thursday.isChecked()) selectedDays.add("Thu");
+            if (friday.isChecked()) selectedDays.add("Fri");
+            if (saturday.isChecked()) selectedDays.add("Sat");
+            if (sunday.isChecked()) selectedDays.add("Sun");
 
-                if (selectedDays.isEmpty()) {
-                    // If no days are selected, default to "Once" or prompt the user
-                    selectedDays.add("Once");
-                }
+            if (selectedDays.isEmpty()) {
+                // If no days are selected, default to "Once" or prompt the user
+                selectedDays.add("Once");
+            }
 
-                // Placeholder for days - Replace this with actual selection from user
-                // String days = "Mon, Wed, Fri";
+            // Notify listener (MainActivity) about the new alarm
+            if (listener != null) {
+                Log.d("NewAlarm", "Listener notified with time: " + time + " and days: " + selectedDays);
+                listener.onNewAlarmCreated(time, selectedDays);
+            } else {
+                Log.e("NewAlarm", "Listener is null");
+            }
 
-                // Convert days from String to List<String>
-                //List<String> daysList = Arrays.asList(days.split(", "));
-                // Notify listener (MainActivity) about the new alarm
-                // Notify listener (MainActivity) about the new alarm
-                if (listener != null) {
-                    Log.d("NewAlarm", "Listener notified with time: " + time + " and days: " + selectedDays);
-                    listener.onNewAlarmCreated(time, selectedDays);
-                } else {
-                    Log.e("NewAlarm", "Listener is null");
-                }
+            // Navigate back to the previous fragment (MainPage)
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
 
-                // Navigate back to the previous fragment (MainPage)
-                requireActivity().getSupportFragmentManager().popBackStack();
-            });
-
-            return view;
-        }
+        return view;
     }
->>>>>>> Stashed changes
+}

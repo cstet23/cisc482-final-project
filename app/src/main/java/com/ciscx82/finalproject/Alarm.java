@@ -1,13 +1,18 @@
 package com.ciscx82.finalproject;
 
 
+// Alarm.java
+
+// Alarm.java
+
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Calendar;
+import java.util.List;
+
 public class Alarm implements Serializable {
-    private String time;
-    private List<String> days;
+    private String time; // Format: "HH:mm"
+    private List<String> days; // List of days like "Mon", "Tue", etc.
 
     public Alarm(String time, List<String> days) {
         this.time = time;
@@ -19,39 +24,38 @@ public class Alarm implements Serializable {
     }
 
     public String getDays() {
-        return String.join(", ", days);// Now properly declared and
+        return String.join(", ", days);
     }
-        // New method to get the list of days
-        public List<String> getDaysList() {
-            return days;
-        }
+
+    public List<String> getDaysList() {
+        return days;
+    }
 
     public boolean isAlarmForToday() {
         // Implement logic to check if the alarm is for today
-        // For simplicity, let's assume it returns true for now
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        int dayOfWeek = calendar.get(java.util.Calendar.DAY_OF_WEEK);
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         String today;
         switch (dayOfWeek) {
-            case java.util.Calendar.MONDAY:
+            case Calendar.MONDAY:
                 today = "Mon";
                 break;
-            case java.util.Calendar.TUESDAY:
+            case Calendar.TUESDAY:
                 today = "Tue";
                 break;
-            case java.util.Calendar.WEDNESDAY:
+            case Calendar.WEDNESDAY:
                 today = "Wed";
                 break;
-            case java.util.Calendar.THURSDAY:
+            case Calendar.THURSDAY:
                 today = "Thu";
                 break;
-            case java.util.Calendar.FRIDAY:
+            case Calendar.FRIDAY:
                 today = "Fri";
                 break;
-            case java.util.Calendar.SATURDAY:
+            case Calendar.SATURDAY:
                 today = "Sat";
                 break;
-            case java.util.Calendar.SUNDAY:
+            case Calendar.SUNDAY:
                 today = "Sun";
                 break;
             default:
@@ -60,7 +64,7 @@ public class Alarm implements Serializable {
         return days.contains(today) || days.contains("Once");
     }
 
-    // Add the following setter methods
+    // Setter methods for modification
     public void setTime(String time) {
         this.time = time;
     }
@@ -68,7 +72,6 @@ public class Alarm implements Serializable {
     public void setDays(List<String> days) {
         this.days = days;
     }
-
 
     /**
      * Calculates the next occurrence of this alarm in milliseconds.
@@ -88,21 +91,8 @@ public class Alarm implements Serializable {
         alarmTime.set(Calendar.SECOND, 0);
         alarmTime.set(Calendar.MILLISECOND, 0);
 
-        // Check if the alarm time has already passed today
-        if (alarmTime.before(now)) {
-            alarmTime.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
         // If the alarm is set for specific days, find the next occurrence
-        if (days.contains("Once")) {
-            // "Once" alarms remain as scheduled
-            if (alarmTime.before(now)) {
-                // If time has passed, remove the alarm or handle accordingly
-                // For simplicity, we'll set it for the next day
-                alarmTime.add(Calendar.DAY_OF_MONTH, 1);
-            }
-        } else {
-            // Find the next day the alarm is set
+        if (!days.contains("Once")) {
             int today = now.get(Calendar.DAY_OF_WEEK);
             int daysUntilNextAlarm = Integer.MAX_VALUE;
             for (String day : days) {
@@ -116,6 +106,12 @@ public class Alarm implements Serializable {
                 }
             }
             alarmTime.add(Calendar.DAY_OF_MONTH, daysUntilNextAlarm);
+        } else {
+            // "Once" alarms remain as scheduled
+            if (alarmTime.before(now)) {
+                // If time has passed, set for the next day or handle accordingly
+                alarmTime.add(Calendar.DAY_OF_MONTH, 1);
+            }
         }
 
         return alarmTime.getTimeInMillis();
@@ -148,5 +144,3 @@ public class Alarm implements Serializable {
         }
     }
 }
-
-

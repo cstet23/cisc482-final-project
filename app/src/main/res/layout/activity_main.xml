@@ -1,80 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-<<<<<<< Updated upstream
-=======
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-
->>>>>>> Stashed changes
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
-
-<<<<<<< Updated upstream
-    <!-- Container for Fragments -->
-    <FrameLayout
-=======
-    <!-- Circular Custom Clock View -->
-
+    tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
->>>>>>> Stashed changes
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="16dp">
+        android:layout_height="match_parent" >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/alarm_recycler_view"
-<<<<<<< Updated upstream
-            android:layout_width="match_parent"
-            android:layout_height="307dp"
-            android:padding="16dp"
-=======
-            android:layout_width="395dp"
-            android:layout_height="207dp"
-            android:layout_margin="20dp"
-            android:background="#FFFFFF"
-            android:padding="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.755"
-            tools:listitem="@layout/alarm_item" />
+        <!-- Circular Analog Clock View -->
 
+
+        <!-- Circular Custom Clock View -->
 
         <com.ciscx82.finalproject.CustomClockView
             android:id="@+id/custom_clock_view"
-            android:layout_width="268dp"
-            android:layout_height="259dp"
-            android:layout_marginBottom="236dp"
-            app:layout_constraintBottom_toBottomOf="@+id/alarm_recycler_view"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:layout_constraintBottom_toTopOf="@+id/alarm_recycler_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.842"
-            tools:ignore="MissingConstraints" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
->>>>>>> Stashed changes
+            app:layout_constraintVertical_bias="0.623" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/alarm_recycler_view"
+            android:layout_width="375dp"
+            android:layout_height="274dp"
+            android:layout_margin="20dp"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.529"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.884"
             tools:listitem="@layout/alarm_item" />
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Floating Action Button to add a new alarm -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_alarm_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
         android:contentDescription="@string/floating_button_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:maxImageSize="50dp"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
-    <!-- RecyclerView for displaying alarms -->
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="#333"
+        android:contentDescription="@string/settingsLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_manage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

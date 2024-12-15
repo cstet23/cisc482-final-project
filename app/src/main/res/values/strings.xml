@@ -2,6 +2,7 @@
     <string name="app_name">FinalProject</string>
     <string name="floating_button_description">Add Alarm</string>
     <string name="add_alarm_header">Add New Alarm</string>
+    <string name="moreSettingsText">There\'s nothing here for now…\n\nHopefully we\'ll have time to implement a color scheme picker here!\n\nIf you have any other ideas for settings you\'d like to see, please let us know!</string>
 
     <string name="add_alarm_setting_name">Name</string>
     <string name="add_alarm_setting_name_hint">(Optional)</string>
@@ -19,5 +20,6 @@
     <string name="weekday_thursday">Th</string>
     <string name="weekday_friday">Fr</string>
     <string name="weekday_saturday">Sa</string>
+    <string name="settingsLabel">settings</string>
 
 </resources>
