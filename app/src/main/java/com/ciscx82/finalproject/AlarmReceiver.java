@@ -1,5 +1,6 @@
 package com.ciscx82.finalproject;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -35,18 +36,18 @@ public class AlarmReceiver extends BroadcastReceiver {
             ringtone.play();
             */
         // Play alarm sound
-        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        RingtoneManager.getRingtone(context, alarmUri).play();
+        //Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        //RingtoneManager.getRingtone(context, alarmUri).play();
 
         // Vibrate the phone
-        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(4000);
+
 
         // Show notification
         showNotification(context);
     }
+    @SuppressLint("MissingPermission")
     private void showNotification(Context context) {
-        Intent intent = new Intent(context, MatchingGame.class);
+        /*Intent intent = new Intent(context, MatchingGame.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
@@ -57,16 +58,17 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentText("Time to play the matching game!")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+                .setAutoCancel(true);*/
 
         // for notification window, had to make a new activity to bind the alert dialog window
         // since it won't work unless it's bound to an activity
         // i think this might have caused the problem of the alarm not returning to the home screen
         // but i assume since we're making it a game that part would've had to be changed anyway
-        //Intent i = new Intent(context, AlertDialogActivity.class);
-        //i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //context.startActivity(i);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(0, builder.build());
+        //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        //notificationManager.notify(0, builder.build());
+        Intent i = new Intent(context, AlertDialogActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
+
     }
 }
