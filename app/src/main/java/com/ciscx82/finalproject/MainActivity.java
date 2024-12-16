@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
         // Load saved alarms
         loadAlarms();
 
-        FloatingActionButton settings = findViewById(R.id.settingsButton);
+        ImageButton settings = findViewById(R.id.settingsButton);
 
         settings.setOnTouchListener((v, event) -> {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {

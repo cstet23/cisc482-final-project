@@ -1,6 +1,7 @@
 package com.ciscx82.finalproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -73,7 +74,8 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             Toast.makeText(this, "You Win!", Toast.LENGTH_LONG).show();
 
             // Close game
-            finish();
+            Intent i = new Intent(GyroGame.this, MainActivity.class);
+            GyroGame.this.startActivity(i);
         });
     }
 

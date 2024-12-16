@@ -47,13 +47,14 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/alarm_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="350dp"
             android:layout_margin="20dp"
             android:padding="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.95"
             tools:listitem="@layout/alarm_item" />
 
         <com.ciscx82.finalproject.CustomClockView

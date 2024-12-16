@@ -44,7 +44,7 @@ public class AlertDialogActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder
                 .setTitle("ALARM")
-                .setMessage("ALARM")
+                .setMessage("Your alarm is ringing! Click Dismiss to go to the game")
                 .setCancelable(false)
                 .setPositiveButton("Dismiss", new DialogInterface.OnClickListener()
                 {
@@ -53,7 +53,7 @@ public class AlertDialogActivity extends Activity {
                         stopRingtone();
                         vibrator.cancel();
                         dialog.cancel();
-                        Intent i = new Intent(AlertDialogActivity.this, MainActivity.class);
+                        Intent i = new Intent(AlertDialogActivity.this, GyroGame.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         AlertDialogActivity.this.startActivity(i);
                     }
