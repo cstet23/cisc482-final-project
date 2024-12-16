@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
         dataBundle = intent.getBundleExtra("DATA_BUNDLE");
 
         // Initialize views
-        FloatingActionButton addButton = findViewById(R.id.add_alarm_button);
+        ImageButton addButton = findViewById(R.id.add_alarm_button);
         alarmRecyclerView = findViewById(R.id.alarm_recycler_view);
         customClockView = findViewById(R.id.custom_clock_view); // Initialize the clock
 

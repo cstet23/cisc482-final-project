@@ -14,35 +14,40 @@
 
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <ImageButton
         android:id="@+id/add_alarm_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
         android:clickable="true"
+        android:background="#99EEC4FF"
         android:contentDescription="@string/floating_button_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:maxImageSize="50dp"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        app:srcCompat="@android:drawable/ic_menu_add"
+        app:tint="#998300FF" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <ImageButton
         android:id="@+id/settingsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="30dp"
         android:clickable="true"
+        android:background="#99EEC4FF"
         android:contentDescription="@string/settingsLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:maxImageSize="40dp"
-        app:srcCompat="@android:drawable/ic_menu_manage" />
+        app:maxImageSize="50dp"
+        app:srcCompat="@android:drawable/ic_menu_manage"
+        app:tint="#998300FF"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/alarm_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="400dp"
             android:layout_margin="20dp"
             android:padding="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
