@@ -1,77 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/layout"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/header_bar"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#DDD"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        >
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline33"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.33" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/header_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#DDD"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/close_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="#00000000"
-        app:tint="#F00"
-        app:layout_constraintBottom_toBottomOf="@+id/header_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/header_bar"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.33" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="0dp"
-        android:text="Settings"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/header_bar"
-        app:layout_constraintTop_toTopOf="@+id/header_bar"
-        app:layout_constraintEnd_toStartOf="@+id/guideline33"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/header_bar" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50" />
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/settings_options"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#EEE"
-        app:itemTextAppearance="@style/menu_text_style"
-        app:itemVerticalPadding="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline33"
-        app:layout_constraintStart_toStartOf="@id/header_bar"
-        app:layout_constraintTop_toBottomOf="@id/header_bar"
-        app:menu="@menu/settings_popup_menu">
+        <ImageButton
+            android:id="@+id/close_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="#00000000"
+            app:tint="#F00"
+            app:layout_constraintBottom_toBottomOf="@+id/header_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/header_bar"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
-    </com.google.android.material.navigation.NavigationView>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:text="Settings"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/header_bar"
+            app:layout_constraintEnd_toStartOf="@+id/guideline50"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/close_settings"
+            app:layout_constraintTop_toTopOf="@+id/header_bar" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/settings_options"
-        app:layout_constraintTop_toBottomOf="@+id/header_bar" />
+        <Button
+            android:id="@+id/save_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/header_bar"
+            app:layout_constraintEnd_toEndOf="@id/header_bar"
+            app:layout_constraintTop_toTopOf="@+id/header_bar"
+            android:text="@string/save_settings"
+            />
 
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/settings_options"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#EEE"
+            app:itemTextAppearance="@style/menu_text_style"
+            app:itemVerticalPadding="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline33"
+            app:layout_constraintStart_toStartOf="@id/header_bar"
+            app:layout_constraintTop_toBottomOf="@id/header_bar"
+            app:menu="@menu/settings_popup_menu">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.navigation.NavigationView>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/settings_options"
+            app:layout_constraintTop_toBottomOf="@+id/header_bar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

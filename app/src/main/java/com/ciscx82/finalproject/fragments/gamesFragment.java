@@ -49,11 +49,16 @@ public class gamesFragment extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 //do something with that information
-                if(checkedId == R.id.radioButtonPuzzleGames && currAct != null) currAct.setGamesSel("Puzzle");
-                else if(checkedId == R.id.radioButtonGyroGames && currAct != null) currAct.setGamesSel("Gyro Only");
-                else if(checkedId == R.id.radioButtonNoGyroGames && currAct != null) currAct.setGamesSel("No Gyro");
-                else if(currAct != null) currAct.setGamesSel("Default");
-                else Log.d("currAct is null", "in gamesSel");
+                if (currAct == null) Log.d("currAct is null", "in gamesSel");
+                else {
+                    if(checkedId == R.id.radioButtonPuzzleGames) currAct.setGamesSel("Puzzle");
+                    else if(checkedId == R.id.radioButtonGyroGames) currAct.setGamesSel("Gyro Only");
+                    else if(checkedId == R.id.radioButtonNoGyroGames) currAct.setGamesSel("No Gyro");
+                    else currAct.setGamesSel("Default");
+                    currAct.setSettingsUpdated(true);
+                }
+
+
             }
         });
 
@@ -65,8 +70,11 @@ public class gamesFragment extends Fragment {
         hintDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (currAct != null) currAct.setHintTime(position * 30);
-                else Log.d("currAct is null", "in hints");
+                if (currAct == null) Log.d("currAct is null", "in hints");
+                else {
+                    currAct.setHintTime(position * 30);
+                    currAct.setSettingsUpdated(true);
+                }
             }
 
             @Override
@@ -78,8 +86,11 @@ public class gamesFragment extends Fragment {
         CheckBox checkBox = finalView.findViewById(R.id.skipBox);
         checkBox.setChecked(skip);
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (currAct != null) currAct.setSkip(isChecked);
-            else Log.d("currAct is null", "in skip");
+            if (currAct == null) Log.d("currAct is null", "in skip");
+            else {
+                currAct.setSkip(isChecked);
+                currAct.setSettingsUpdated(true);
+            }
         });
         return finalView;
     }
