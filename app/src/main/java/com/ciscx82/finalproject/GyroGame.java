@@ -165,7 +165,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
     // Ball class
     private class Ball {
         float x, y, radius, xVel, yVel, xAccel, yAccel;
-        float friction = 0.2f;
+        float friction = 0.2f, maxVel = 12.0f;
 
         public Ball(float x, float y, float radius) {
             this.x = x;
@@ -181,10 +181,10 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         }
 
         public void update(float tiltX, float tiltY, int screenWidth, int screenHeight, Maze maze) {
-            xAccel = update_accel(-tiltX);
-            yAccel = update_accel(tiltY);
-            xVel = update_vel(xVel, xAccel);
-            yVel = update_vel(yVel, yAccel);
+            xAccel = update_accel(-tiltX); // set X acceleration based on tilt
+            yAccel = update_accel(tiltY); // set Y acceleration based on tilt
+            xVel = update_vel(xVel, xAccel); // update X velocity based on X acceleration
+            yVel = update_vel(yVel, yAccel); // update Y velocity based on Y acceleration
             float newX = x + xVel; // Calculate new X position
             float newY = y + yVel; // Calculate new Y position
 
@@ -199,20 +199,17 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         }
 
         private float update_accel(float tilt) {
-            var accel = tilt * 0.3f;
-            if (accel < 0) {
-                return Math.min(accel, -friction) + friction;
-            } else return Math.max(accel, friction) - friction;
+            return tilt * 0.25f; // arbitrary coefficient, can change to increase/decrease how much tilt affects acceleration
         }
 
         private float update_vel(float vel, float accel) {
-            var newVel = clamp_vel(vel + accel);
-            if (newVel < 0) {
+            var newVel = clamp_vel(vel + accel); // keeps velocity between hard-coded max and min
+            if (newVel < 0) { // if velocity is less than friction, returns 0, otherwise returns difference between velocity and friction
                 return Math.min(newVel, -friction) + friction;
             } else return Math.max(newVel, friction) - friction;
         }
         private float clamp_vel(float vel) {
-            return Math.max(-12.0f, Math.min(12.0f, vel));
+            return Math.max(-maxVel, Math.min(maxVel, vel)); // arbitrary maxVel, can be changed for self-explanatory results
         }
 
     }
