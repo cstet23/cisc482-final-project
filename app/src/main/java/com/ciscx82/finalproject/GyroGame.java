@@ -164,12 +164,15 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
 
     // Ball class
     private class Ball {
-        float x, y, radius;
+        float x, y, radius, xVel, yVel, xAccel, yAccel;
+        float friction = 0.2f;
 
         public Ball(float x, float y, float radius) {
             this.x = x;
             this.y = y;
             this.radius = radius;
+            this.xVel = 0;
+            this.yVel = 0;
         }
 
         public void draw(Canvas canvas, Paint paint) {
@@ -178,8 +181,12 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         }
 
         public void update(float tiltX, float tiltY, int screenWidth, int screenHeight, Maze maze) {
-            float newX = x - tiltX * 5; // Calculate new X position
-            float newY = y + tiltY * 5; // Calculate new Y position
+            xAccel = update_accel(-tiltX);
+            yAccel = update_accel(tiltY);
+            xVel = update_vel(xVel, xAccel);
+            yVel = update_vel(yVel, yAccel);
+            float newX = x + xVel; // Calculate new X position
+            float newY = y + yVel; // Calculate new Y position
 
             // Check for collisions with walls before updating position
             if (!maze.collidesWithWall(newX, y, radius)) {
@@ -189,6 +196,23 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             if (!maze.collidesWithWall(x, newY, radius)) {
                 y = Math.max(radius, Math.min(screenHeight - radius, newY)); // Update Y if no collision
             }
+        }
+
+        private float update_accel(float tilt) {
+            var accel = tilt * 0.3f;
+            if (accel < 0) {
+                return Math.min(accel, -friction) + friction;
+            } else return Math.max(accel, friction) - friction;
+        }
+
+        private float update_vel(float vel, float accel) {
+            var newVel = clamp_vel(vel + accel);
+            if (newVel < 0) {
+                return Math.min(newVel, -friction) + friction;
+            } else return Math.max(newVel, friction) - friction;
+        }
+        private float clamp_vel(float vel) {
+            return Math.max(-12.0f, Math.min(12.0f, vel));
         }
 
     }
