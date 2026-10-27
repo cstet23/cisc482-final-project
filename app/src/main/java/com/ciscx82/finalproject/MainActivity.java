@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
@@ -118,6 +119,18 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
         settings.setOnTouchListener((v, event) -> {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                MainActivity.this.startActivity(myIntent);
+                return true;
+            }
+            return false;
+        });
+
+        // can get rid of this later, takes you to gyro so you don't have to wait for an alarm to go off
+        Button quickGame = findViewById(R.id.game_button);
+
+        quickGame.setOnTouchListener((v, event) -> {
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                Intent myIntent = new Intent(MainActivity.this, GyroGame.class);
                 MainActivity.this.startActivity(myIntent);
                 return true;
             }
