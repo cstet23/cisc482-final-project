@@ -264,6 +264,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         public void generateMaze(int rows, int columns, int screenWidth, int screenHeight) {
             Log.d("gyro", "generating maze");
             walls.add(new RectF(0, 700, 700, 710)); // Horizontal wall
+            //use prim's simplified algo btw!! https://en.wikipedia.org/wiki/Maze_generation_algorithm#Iterative_randomized_Prim's_algorithm_(without_stack,_without_sets)
 //            walls.add(new RectF(0, ))
 //            for(int i=0; i<rows; i++) {
 //                makeWall(screenWidth, screenHeight);
