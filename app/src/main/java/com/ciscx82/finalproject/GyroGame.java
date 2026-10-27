@@ -189,12 +189,26 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             float newY = y + yVel; // Calculate new Y position
 
             // Check for collisions with walls before updating position
-            if (!maze.collidesWithWall(newX, y, radius)) {
+            var xCollision = maze.collidesWithWall(newX, y, radius);
+            var yCollision = maze.collidesWithWall(x, newY, radius);
+            if (xCollision == null) {
                 x = Math.max(radius, Math.min(screenWidth - radius, newX)); // Update X if no collision
+            } else {
+                if (xVel < 0) {
+                    x = xCollision.right + radius;
+                } else {
+                    x = xCollision.left - radius;
+                }
             }
 
-            if (!maze.collidesWithWall(x, newY, radius)) {
+            if (yCollision == null) {
                 y = Math.max(radius, Math.min(screenHeight - radius, newY)); // Update Y if no collision
+            } else {
+                if (yVel < 0) {
+                    y = yCollision.bottom + radius;
+                } else {
+                    y = yCollision.top - radius;
+                }
             }
         }
 
@@ -240,15 +254,15 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             }
         }
 
-        public boolean collidesWithWall(float x, float y, float radius) {
+        public RectF collidesWithWall(float x, float y, float radius) {
             for (RectF wall : walls) {
                 // Check if the ball intersects with any wall
                 if ((x + radius > wall.left) && (x - radius < wall.right) && (y + radius > wall.top) && (y - radius < wall.bottom)) {
                     //Log.d("Collision", "Collision with wall: " + wall.toString());
-                    return true; // Collision detected
+                    return wall; // Collision detected
                 }
             }
-            return false; // No collision
+            return null; // No collision
         }
     }
 
