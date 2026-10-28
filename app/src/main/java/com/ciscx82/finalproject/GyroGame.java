@@ -26,7 +26,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor gyroscopeSensor;
     private GameView gameView;
-    private String difficulty;
+    private String difficulty = "easy";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,15 +96,13 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         private Maze maze;
         private Goal goal;
         private boolean surfaceReady = false;
-        //private final int screenWidth = getWidth();
-        //private final int screenHeight = getHeight();
 
         public GameView(Context context) {
             super(context);
             getHolder().addCallback(this);
             paint = new Paint();
             ball = new Ball(100, 100, 20); // Ball with initial position and radius
-            maze = new Maze(1000, 2000);//screenWidth, screenHeight); // Initialize the maze
+            maze = new Maze(); // Initialize the maze
             goal = new Goal(800, 1900, 20); // Goal position
         }
 
@@ -136,7 +134,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
                     canvas.drawColor(Color.WHITE);
 
                     // Draw maze
-                    maze.draw(canvas, paint);
+                    maze.draw(canvas, paint, getWidth(), getHeight());
 
                     // Draw goal
                     goal.draw(canvas, paint);
@@ -244,35 +242,42 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         private List<RectF> walls;
         private int rows, columns;
 
-        public Maze(int screenWidth, int screenHeight) {
-            Log.d("gyro", "initializing maze");
+        public Maze() {
             walls = new ArrayList<>();
-//            switch (getDifficulty()) { <-- running this crashes, presumably the function is not loaded yet
-//                case "easy":
-//                    rows = 6; columns = 4;
-//                case "medium":
-//                    rows = 8; columns = 6;
-//                case "hard":
-//                    rows = 10; columns = 8;
-//                default:
-//                    rows = 6; columns = 4;
-//            }
-            rows = 6; columns = 4;
-            generateMaze(rows, columns, screenWidth, screenHeight);
+            switch (difficulty) {
+                case "medium":
+                    rows = 8; columns = 6; break;
+                case "hard":
+                    rows = 10; columns = 8; break;
+                default:
+                    rows = 6; columns = 4; break;
+            }
         }
 
-        public void generateMaze(int rows, int columns, int screenWidth, int screenHeight) {
-            Log.d("gyro", "generating maze");
-            walls.add(new RectF(0, 700, 700, 710)); // Horizontal wall
+        public void generateMaze(int rows, int columns, int mazeWidth, int mazeHeight) {
+            //walls.add(new RectF(0, 700, 700, 710)); // Horizontal wall
             //use prim's simplified algo btw!! https://en.wikipedia.org/wiki/Maze_generation_algorithm#Iterative_randomized_Prim's_algorithm_(without_stack,_without_sets)
-//            walls.add(new RectF(0, ))
-//            for(int i=0; i<rows; i++) {
-//                makeWall(screenWidth, screenHeight);
-//            }
+            walls.add(new RectF(5, 5, 20, mazeHeight)); // left wall
+            walls.add(new RectF(5, 5,  mazeWidth, 20)); // ceiling
+            walls.add(new RectF(mazeWidth - 20, 5, mazeWidth, mazeHeight)); // right wall
+            walls.add(new RectF(5, mazeHeight - 20,  mazeWidth, mazeHeight)); // floor
+            for(int row=1, col=1; row<=rows; col++) { // generate vertical walls
+                makeWall(row, col, true, mazeWidth, mazeHeight);
+                if (col + 1 == columns) {
+                    row++; col = 0;
+                }
+            }
+            for(int row=1, col=1; col<=columns; row++) { // generate horizontal walls
+                makeWall(row, col, false, mazeWidth, mazeHeight);
+                if (row + 1 == rows) {
+                    col++; row = 0;
+                }
+            }
         }
 
-        public void makeWall(int x, int y, boolean orientation, int screenWidth, int screenHeight) {
-            //Wall newWall = new Wall(x, y, orientation, screenWidth, screenHeight);
+        public void makeWall(int x, int y, boolean orientation, int mazeWidth, int mazeHeight) {
+            Wall newWall = new Wall(x, y, orientation, mazeWidth, mazeHeight);
+            newWall.addWall(walls, rows, columns);
 //            // Define the maze walls as rectangles
 
 //            walls.add(new RectF(490, 0, 500, 500)); // Vertical wall
@@ -285,8 +290,8 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
 //            walls.add(new RectF(900, 1100, 910, 2000));
         }
 
-        public void draw(Canvas canvas, Paint paint) {
-            Log.d("gyro", "drawing maze");
+        public void draw(Canvas canvas, Paint paint, int screenWidth, int screenHeight) {
+            generateMaze(rows, columns, screenWidth - 5, screenHeight - 5);
             paint.setColor(Color.BLACK);
             for (RectF wall : walls) {
                 canvas.drawRect(wall, paint); // Draw each wall as a rectangle
@@ -294,7 +299,6 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         }
 
         public RectF collidesWithWall(float x, float y, float radius) {
-            Log.d("gyro", "collision check");
             for (RectF wall : walls) {
                 // Check if the ball intersects with any wall
                 if ((x + radius > wall.left) && (x - radius < wall.right) && (y + radius > wall.top) && (y - radius < wall.bottom)) {
@@ -327,37 +331,40 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         }
     }
 
-//    private class Cell {
-//        int xLoc, yLoc;
-//        List<Wall> adjacentWalls;
-//
-//        public Cell(int xLoc, int yLoc) {
-//            this.xLoc = xLoc;
-//            this.yLoc = yLoc;
-//        }
-//    }
+    private class Cell {
+        int xLoc, yLoc;
+        List<Wall> adjacentWalls;
 
-//    private class Wall {
-//        int row, column; // vertical can be row 1-6 and column 1-5, horizontal can be row 1-7 and column 1-4
-//        boolean orientation; // true for vertical, false for horizontal
-//        int width = 10;
-//        int screenWidth, screenHeight;
-//
-//        public Wall(int row, int column, boolean orientation, int screenWidth, int screenHeight) {
-//            this.row = row;
-//            this.column = column;
-//            this.orientation = orientation;
-//            this.screenWidth = screenWidth;
-//            this.screenHeight = screenHeight;
-//        }
-//
-//        public void addWall(List<RectF> walls) {
-//            if (this.orientation) {
-//                //walls.add(new RectF(490, 0, 500, 500)); // Vertical wall
-//            } else {
-//                //walls.add(new RectF(0, 700, 700, 710)); // Horizontal wall
-//            }
-//        }
-//    }
+        public Cell(int xLoc, int yLoc) {
+            this.xLoc = xLoc;
+            this.yLoc = yLoc;
+        }
+    }
+
+    private class Wall {
+        int row, column; // vertical can be row 1-6 and column 1-3, horizontal can be row 1-5 and column 1-4
+        boolean orientation; // true for vertical, false for horizontal
+        int width = 10;
+        int mazeWidth, mazeHeight;
+
+        public Wall(int row, int column, boolean orientation, int mazeWidth, int mazeHeight) {
+            this.row = row;
+            this.column = column;
+            this.orientation = orientation;
+            this.mazeWidth = mazeWidth;
+            this.mazeHeight = mazeHeight;
+        }
+
+        public void addWall(List<RectF> walls, int rows, int columns) {
+            var colDist = mazeWidth/columns;
+            var rowDist = mazeHeight/rows;
+            var halfWidth = width/2;
+            if (this.orientation) {
+                walls.add(new RectF(column*colDist - halfWidth, (row-1)*rowDist, column*colDist + halfWidth, row*rowDist)); // Vertical wall
+            } else {
+                walls.add(new RectF((column-1)*colDist, row*rowDist - halfWidth, column*colDist, row*rowDist + halfWidth)); // Vertical wall
+            }
+        }
+    }
 }
 
