@@ -12,14 +12,18 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class GyroGame extends AppCompatActivity implements SensorEventListener {
 
@@ -240,10 +244,12 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
     // Maze class
     private class Maze {
         private List<RectF> walls;
+        private HashMap<Pair<Integer, Integer>, Cell> cells;
         private int rows, columns;
 
         public Maze() {
             walls = new ArrayList<>();
+            cells = new HashMap<Pair<Integer, Integer>, Cell>();
             switch (difficulty) {
                 case "medium":
                     rows = 8; columns = 6; break;
@@ -257,37 +263,57 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         public void generateMaze(int rows, int columns, int mazeWidth, int mazeHeight) {
             //walls.add(new RectF(0, 700, 700, 710)); // Horizontal wall
             //use prim's simplified algo btw!! https://en.wikipedia.org/wiki/Maze_generation_algorithm#Iterative_randomized_Prim's_algorithm_(without_stack,_without_sets)
-            walls.add(new RectF(5, 5, 20, mazeHeight)); // left wall
-            walls.add(new RectF(5, 5,  mazeWidth, 20)); // ceiling
-            walls.add(new RectF(mazeWidth - 20, 5, mazeWidth, mazeHeight)); // right wall
-            walls.add(new RectF(5, mazeHeight - 20,  mazeWidth, mazeHeight)); // floor
-            for(int row=1, col=1; row<=rows; col++) { // generate vertical walls
-                makeWall(row, col, true, mazeWidth, mazeHeight);
-                if (col + 1 == columns) {
-                    row++; col = 0;
+            try {
+                for (int row = 1, col = 1; row <= rows; col++) { // generate cells
+                    makeCell(row, col);
+                    if (col >= columns) {
+                        row++;
+                        col = 0;
+                    }
                 }
-            }
-            for(int row=1, col=1; col<=columns; row++) { // generate horizontal walls
-                makeWall(row, col, false, mazeWidth, mazeHeight);
-                if (row + 1 == rows) {
-                    col++; row = 0;
+//                Log.d("gyro", "cells: "+cells);
+                for (int row = 1, col = 1; row <= rows; col++) { // generate vertical walls
+                    makeWall(row, col, true, mazeWidth, mazeHeight);
+                    if (col + 1 == columns) {
+                        row++;
+                        col = 0;
+                    }
                 }
+                for (int row = 1, col = 1; col <= columns; row++) { // generate horizontal walls
+                    makeWall(row, col, false, mazeWidth, mazeHeight);
+                    if (row + 1 == rows) {
+                        col++;
+                        row = 0;
+                    }
+                }
+            } finally {
+                for (int row = 1, col = 1; col <= columns; row++) { // generate cells
+                    Log.d("gyro", "cell "+Pair.create(row, col)+": "+Objects.requireNonNull(cells.get(Pair.create(row, col))).adjacentWalls);
+                    if (row >= rows) {
+                        col++;
+                        row = 0;
+                    }
+                }
+                makeBorders(mazeHeight, mazeWidth);
             }
+        }
+
+        public void makeCell(int x, int y) {
+            Cell newCell = new Cell(x, y);
+            cells.put(Pair.create(x,y), newCell);
         }
 
         public void makeWall(int x, int y, boolean orientation, int mazeWidth, int mazeHeight) {
             Wall newWall = new Wall(x, y, orientation, mazeWidth, mazeHeight);
             newWall.addWall(walls, rows, columns);
-//            // Define the maze walls as rectangles
+            newWall.addAdjacencies(cells);
+        }
 
-//            walls.add(new RectF(490, 0, 500, 500)); // Vertical wall
-//            walls.add(new RectF(200, 490, 500, 500)); // Horizontal wall
-//            walls.add(new RectF(200, 0, 210, 500)); // Vertical wall
-//            walls.add(new RectF(700, 700, 710, 2000));
-//            walls.add(new RectF(900, 0, 910, 900));
-//            walls.add(new RectF(900, 900, 1100, 910));
-//            walls.add(new RectF(900, 1100, 1100, 1110));
-//            walls.add(new RectF(900, 1100, 910, 2000));
+        public void makeBorders(int mazeHeight, int mazeWidth) {
+            walls.add(new RectF(5, 5, 20, mazeHeight)); // left wall
+            walls.add(new RectF(5, 5,  mazeWidth, 20)); // ceiling
+            walls.add(new RectF(mazeWidth - 20, 5, mazeWidth, mazeHeight)); // right wall
+            walls.add(new RectF(5, mazeHeight - 20,  mazeWidth, mazeHeight)); // floor
         }
 
         public void draw(Canvas canvas, Paint paint, int screenWidth, int screenHeight) {
@@ -332,12 +358,17 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
     }
 
     private class Cell {
-        int xLoc, yLoc;
+        int row, column; //
         List<Wall> adjacentWalls;
 
-        public Cell(int xLoc, int yLoc) {
-            this.xLoc = xLoc;
-            this.yLoc = yLoc;
+        public Cell(int row, int column) {
+            this.row = row;
+            this.column = column;
+            this.adjacentWalls = new ArrayList<Wall>();
+        }
+
+        public void addCellToMaze(List<Cell> maze) {
+            maze.add(this);
         }
     }
 
@@ -346,6 +377,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         boolean orientation; // true for vertical, false for horizontal
         int width = 10;
         int mazeWidth, mazeHeight;
+        Cell subCell, superCell;
 
         public Wall(int row, int column, boolean orientation, int mazeWidth, int mazeHeight) {
             this.row = row;
@@ -355,15 +387,41 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             this.mazeHeight = mazeHeight;
         }
 
+        @NonNull
+        @Override
+        public String toString() {
+            if (orientation) {
+                return "Vertical Wall <"+row+", "+column+">";
+            } else {
+                return "Horizontal Wall <" + row + ", " + column + ">";
+            }
+        }
+
         public void addWall(List<RectF> walls, int rows, int columns) {
             var colDist = mazeWidth/columns;
             var rowDist = mazeHeight/rows;
             var halfWidth = width/2;
             if (this.orientation) {
-                walls.add(new RectF(column*colDist - halfWidth, (row-1)*rowDist, column*colDist + halfWidth, row*rowDist)); // Vertical wall
+                walls.add(new RectF(column*colDist - halfWidth, (row-1)*rowDist + 5, column*colDist + halfWidth, row*rowDist)); // Vertical wall
             } else {
-                walls.add(new RectF((column-1)*colDist, row*rowDist - halfWidth, column*colDist, row*rowDist + halfWidth)); // Vertical wall
+                walls.add(new RectF((column-1)*colDist + 5, row*rowDist - halfWidth, column*colDist, row*rowDist + halfWidth)); // Horizontal wall
             }
+        }
+
+        public void addAdjacencies(HashMap<Pair<Integer,Integer>, Cell> cells) {
+            subCell = cells.get(Pair.create(row, column));
+            if (this.orientation) {
+                superCell = cells.get(Pair.create(row+1, column));
+            } else {
+                superCell = cells.get(Pair.create(row, column+1));
+            }
+            if (subCell != null) {
+                subCell.adjacentWalls.add(this);
+            }
+            if (superCell != null) {
+                superCell.adjacentWalls.add(this);
+            }
+
         }
     }
 }
