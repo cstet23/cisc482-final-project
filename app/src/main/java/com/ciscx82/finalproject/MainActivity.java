@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
@@ -50,11 +51,11 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
     private FloatingActionButton addButton;
     private AlarmAdapter alarmAdapter;
     private List<Alarm> alarmList;
-    private Bundle dataBundle;
     private SettingsList settingsList;
 
-    private SharedPreferences sharedPreferences; // If using SharedPreferences
-    private Gson gson; // If using Gson for serialization
+    private SharedPreferences alarmPreferences; // Saving alarms between sessions
+    private SharedPreferences settingsPreferences; // Saving settings between sessions
+    private Gson gson; // For serializing, used with SharedPreferences
 
     private CustomClockView customClockView; // Reference to the CustomClockView
 
@@ -65,10 +66,6 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
-        //get passed in content if coming from settings screen
-        Intent intent = getIntent();
-        dataBundle = intent.getBundleExtra("DATA_BUNDLE");
 
         // Initialize views
         ImageButton addButton = findViewById(R.id.add_alarm_button);
@@ -88,14 +85,9 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
         });
 
         // Initialize RecyclerView
-        if(dataBundle != null && !(dataBundle.isEmpty())) {
-            alarmList = (ArrayList<Alarm>) dataBundle.getSerializable("ALARM_LIST");
-            settingsList = (SettingsList) dataBundle.getSerializable("SETTINGS_LIST");
-        }
-        else {
-            alarmList = new ArrayList<>();
-            settingsList = new SettingsList();
-        }
+        alarmList = new ArrayList<>();
+        settingsList = new SettingsList();
+
         alarmAdapter = new AlarmAdapter(alarmList);
         alarmRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         alarmRecyclerView.setAdapter(alarmAdapter);
@@ -112,21 +104,33 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
         });
 
         // Initialize SharedPreferences and Gson for persistence
-        sharedPreferences = getSharedPreferences("alarms_prefs", MODE_PRIVATE);
+        alarmPreferences = getSharedPreferences("alarms_prefs", MODE_PRIVATE);
+        settingsPreferences = getSharedPreferences("saved_settings", MODE_PRIVATE);
         gson = new Gson();
 
         // Load saved alarms
         loadAlarms();
+
+        // Load saved settings
+        loadSettings();
 
         ImageButton settings = findViewById(R.id.settingsButton);
 
         settings.setOnTouchListener((v, event) -> {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                dataBundle = new Bundle();
-                dataBundle.putSerializable("ALARM_LIST", (Serializable) alarmList);
-                dataBundle.putSerializable("SETTINGS_LIST", settingsList);
-                myIntent.putExtra("DATA_BUNDLE", dataBundle);
+                MainActivity.this.startActivity(myIntent);
+                return true;
+            }
+            return false;
+        });
+
+        // can get rid of this later, takes you to gyro so you don't have to wait for an alarm to go off
+        Button quickGame = findViewById(R.id.game_button);
+
+        quickGame.setOnTouchListener((v, event) -> {
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                Intent myIntent = new Intent(MainActivity.this, GyroGame.class);
                 MainActivity.this.startActivity(myIntent);
                 return true;
             }
@@ -316,13 +320,13 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
     // Method to save alarms using SharedPreferences
     private void saveAlarms() {
         String json = gson.toJson(alarmList);
-        sharedPreferences.edit().putString("alarms", json).apply();
+        alarmPreferences.edit().putString("alarms", json).apply();
         Log.d("MainActivity", "Alarms saved to SharedPreferences.");
     }
 
     // Method to load alarms from SharedPreferences
     private void loadAlarms() {
-        String json = sharedPreferences.getString("alarms", null);
+        String json = alarmPreferences.getString("alarms", null);
         if (json != null) {
             Type type = new TypeToken<List<Alarm>>() {}.getType();
             alarmList = gson.fromJson(json, type);
@@ -332,6 +336,19 @@ public class MainActivity extends AppCompatActivity implements NewAlarm.NewAlarm
             customClockView.setAlarms(alarmList);
         } else {
             Log.d("MainActivity", "No alarms found in SharedPreferences.");
+        }
+    }
+
+    private void loadSettings() {
+        String json = settingsPreferences.getString("settings", null);
+        if (json != null) {
+            Type type = new TypeToken<SettingsList>() {}.getType();
+            settingsList = gson.fromJson(json, type);
+        } else {
+            Log.d("MainActivity", "No settings found in SharedPreferences.");
+            settingsList = new SettingsList();
+            String newJson = gson.toJson(settingsList);
+            settingsPreferences.edit().putString("settings", newJson).apply();
         }
     }
 

@@ -12,37 +12,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <ImageButton
+            android:id="@+id/add_alarm_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:clickable="true"
+            android:background="#99EEC4FF"
+            android:contentDescription="@string/floating_button_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxImageSize="50dp"
+            app:srcCompat="@android:drawable/ic_menu_add"
+            app:tint="#998300FF" />
 
-
-    <ImageButton
-        android:id="@+id/add_alarm_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:clickable="true"
-        android:background="#99EEC4FF"
-        android:contentDescription="@string/floating_button_description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:maxImageSize="50dp"
-        app:srcCompat="@android:drawable/ic_menu_add"
-        app:tint="#998300FF" />
-
-    <ImageButton
-        android:id="@+id/settingsButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="30dp"
-        android:clickable="true"
-        android:background="#99EEC4FF"
-        android:contentDescription="@string/settingsLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:maxImageSize="50dp"
-        app:srcCompat="@android:drawable/ic_menu_manage"
-        app:tint="#998300FF"/>
+        <ImageButton
+            android:id="@+id/settingsButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="30dp"
+            android:clickable="true"
+            android:background="#99EEC4FF"
+            android:contentDescription="@string/settingsLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxImageSize="50dp"
+            app:srcCompat="@android:drawable/ic_menu_manage"
+            app:tint="#998300FF"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/alarm_recycler_view"
@@ -67,6 +65,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.623" />
+
+        <Button
+            android:id="@+id/game_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Go to Gyro"
+            app:layout_constraintTop_toBottomOf="@id/alarm_recycler_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="10dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

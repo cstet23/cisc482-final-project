@@ -22,5 +22,6 @@
     <string name="weekday_friday">Fr</string>
     <string name="weekday_saturday">Sa</string>
     <string name="settingsLabel">settings</string>
+    <string name="save_settings">Save Settings</string>
 
 </resources>

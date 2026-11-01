@@ -47,8 +47,11 @@ public class alarmsFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // change the volume value to be passed back to main activity
-                if (currAct != null) currAct.setVolume(seekBar.getProgress());
-                else Log.d("currAct is null", "in volume");
+                if (currAct == null) Log.d("currAct is null", "in volume");
+                else {
+                    currAct.setVolume(seekBar.getProgress());
+                    currAct.setSettingsUpdated(true);
+                }
             }
         });
 
@@ -57,9 +60,13 @@ public class alarmsFragment extends Fragment {
         else toneButtons.check(R.id.radioButtonDefaultTone);
         toneButtons.setOnCheckedChangeListener((group, checkedId) -> {
             //do something with that information
-            if(checkedId == R.id.radioButtonCustomTone && currAct != null) currAct.setTone("Custom");
-            else if(currAct != null) currAct.setTone("Default");
-            else Log.d("currAct is null", "in tone");
+            if (currAct == null) Log.d("currAct is null", "in tone");
+            else {
+                if(checkedId == R.id.radioButtonCustomTone) currAct.setTone("Custom");
+                else currAct.setTone("Default");
+                currAct.setSettingsUpdated(true);
+            }
+
         });
 
         return finalView;
