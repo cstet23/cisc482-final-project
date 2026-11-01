@@ -271,7 +271,6 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
                         col = 0;
                     }
                 }
-//                Log.d("gyro", "cells: "+cells);
                 for (int row = 1, col = 1; row <= rows; col++) { // generate vertical walls
                     makeWall(row, col, true, mazeWidth, mazeHeight);
                     if (col + 1 == columns) {
@@ -286,14 +285,19 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
                         row = 0;
                     }
                 }
+                var startCell = cells.get(Pair.create((int)(Math.random() * 6) + 1, (int)(Math.random() * 4) + 1));
+                var endCell = cells.get(Pair.create((int)(Math.random() * 6) + 1, (int)(Math.random() * 4) + 1));
+//                assert startCell != null;
+//                Log.d("gyro", startCell.toString());
+                removeMazeWalls(startCell, endCell);
             } finally {
-                for (int row = 1, col = 1; col <= columns; row++) { // generate cells
-                    Log.d("gyro", "cell "+Pair.create(row, col)+": "+Objects.requireNonNull(cells.get(Pair.create(row, col))).adjacentWalls);
-                    if (row >= rows) {
-                        col++;
-                        row = 0;
-                    }
-                }
+//                for (int row = 1, col = 1; col <= columns; row++) { // log all the cells
+//                    Log.d("gyro", "cell "+Pair.create(row, col)+": "+Objects.requireNonNull(cells.get(Pair.create(row, col))).adjacentWalls);
+//                    if (row >= rows) {
+//                        col++;
+//                        row = 0;
+//                    }
+//                }
                 makeBorders(mazeHeight, mazeWidth);
             }
         }
@@ -307,6 +311,16 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             Wall newWall = new Wall(x, y, orientation, mazeWidth, mazeHeight);
             newWall.addWall(walls, rows, columns);
             newWall.addAdjacencies(cells);
+        }
+
+        public void removeMazeWalls(Cell startCell, Cell endCell) {
+            var remainingWalls = new ArrayList<Wall>(startCell.adjacentWalls);
+            while (!remainingWalls.isEmpty()) {
+                var chosenWall = (int)(Math.random() * remainingWalls.size());
+                //high-level : pick a wall, find the cell on the other side, put it in the maze if it's not
+                //and add its walls, if it is then ignore it
+                //then pick a new wall and start again til no more walls
+            }
         }
 
         public void makeBorders(int mazeHeight, int mazeWidth) {
@@ -367,6 +381,12 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             this.adjacentWalls = new ArrayList<Wall>();
         }
 
+        @NonNull
+        @Override
+        public String toString() {
+            return "Cell <"+row+", "+column+">";
+        }
+
         public void addCellToMaze(List<Cell> maze) {
             maze.add(this);
         }
@@ -411,9 +431,9 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         public void addAdjacencies(HashMap<Pair<Integer,Integer>, Cell> cells) {
             subCell = cells.get(Pair.create(row, column));
             if (this.orientation) {
-                superCell = cells.get(Pair.create(row+1, column));
-            } else {
                 superCell = cells.get(Pair.create(row, column+1));
+            } else {
+                superCell = cells.get(Pair.create(row+1, column));
             }
             if (subCell != null) {
                 subCell.adjacentWalls.add(this);
