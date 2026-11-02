@@ -106,8 +106,8 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             getHolder().addCallback(this);
             paint = new Paint();
             ball = new Ball(100, 100, 20); // Ball with initial position and radius
-            maze = new Maze(); // Initialize the maze
-            goal = new Goal(800, 1900, 20); // Goal position
+            goal = new Goal(); // Goal
+            maze = new Maze(ball, goal); // Initialize the maze
         }
 
         @Override
@@ -187,6 +187,11 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             this.yVel = 0;
         }
 
+        public void placeBall(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
         public void draw(Canvas canvas, Paint paint) {
             paint.setColor(Color.RED);
             canvas.drawCircle(x, y, radius, paint);
@@ -246,8 +251,10 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
         private List<RectF> walls;
         private HashMap<Pair<Integer, Integer>, Cell> cells;
         private int rows, columns;
+        private Goal goal;
+        private Ball ball;
 
-        public Maze() {
+        public Maze(Ball ball, Goal goal) {
             walls = new ArrayList<>();
             cells = new HashMap<Pair<Integer, Integer>, Cell>();
             switch (difficulty) {
@@ -258,6 +265,8 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
                 default:
                     rows = 6; columns = 4; break;
             }
+            this.ball = ball;
+            this.goal = goal;
         }
 
         public void generateMaze(int rows, int columns, int mazeWidth, int mazeHeight) {
@@ -271,6 +280,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
                         col = 0;
                     }
                 }
+
                 for (int row = 1, col = 1; row <= rows; col++) { // generate vertical walls
                     makeWall(row, col, true, mazeWidth, mazeHeight);
                     if (col + 1 == columns) {
@@ -278,6 +288,7 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
                         col = 0;
                     }
                 }
+
                 for (int row = 1, col = 1; col <= columns; row++) { // generate horizontal walls
                     makeWall(row, col, false, mazeWidth, mazeHeight);
                     if (row + 1 == rows) {
@@ -285,19 +296,27 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
                         row = 0;
                     }
                 }
-                var startCell = cells.get(Pair.create((int)(Math.random() * 6) + 1, (int)(Math.random() * 4) + 1));
-                var endCell = cells.get(Pair.create((int)(Math.random() * 6) + 1, (int)(Math.random() * 4) + 1));
-//                assert startCell != null;
-//                Log.d("gyro", startCell.toString());
-                removeMazeWalls(startCell, endCell);
+
+                var startRow = (int)(Math.random() * rows) + 1;
+                var startCol = (int)(Math.random() * columns) + 1;
+                var startCell = cells.get(Pair.create(startRow, startCol));
+                assert startCell != null;
+
+                var endRow = (int)(Math.random() * rows) + 1;
+                var endCol = (int)(Math.random() * columns) + 1;
+                while (Math.abs(startCell.row - endRow) < 3) {
+                    endRow = (int)(Math.random() * rows) + 1;
+                }
+                while (Math.abs(startCell.column - endCol) < 3) {
+                    endCol = (int)(Math.random() * columns) + 1;
+                }
+
+                var drawnWalls = new ArrayList<Wall>();
+                removeMazeWalls(startCell, drawnWalls);
+
+                ball.placeBall(convertRowToScreen(startRow, mazeHeight), convertColToScreen(startCol, mazeWidth));
+                goal.placeGoal(convertRowToScreen(endRow, mazeHeight), convertColToScreen(endCol, mazeWidth));
             } finally {
-//                for (int row = 1, col = 1; col <= columns; row++) { // log all the cells
-//                    Log.d("gyro", "cell "+Pair.create(row, col)+": "+Objects.requireNonNull(cells.get(Pair.create(row, col))).adjacentWalls);
-//                    if (row >= rows) {
-//                        col++;
-//                        row = 0;
-//                    }
-//                }
                 makeBorders(mazeHeight, mazeWidth);
             }
         }
@@ -313,13 +332,29 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             newWall.addAdjacencies(cells);
         }
 
-        public void removeMazeWalls(Cell startCell, Cell endCell) {
-            var remainingWalls = new ArrayList<Wall>(startCell.adjacentWalls);
+        public void removeMazeWalls(Cell startCell, List<Wall> drawnWalls) {
+            Log.d("gyro", "prepping to remove");
+            var mazeCells = new ArrayList<Cell>();
+            mazeCells.add(startCell);
+            var remainingWalls = new ArrayList<>(startCell.adjacentWalls);
             while (!remainingWalls.isEmpty()) {
-                var chosenWall = (int)(Math.random() * remainingWalls.size());
-                //high-level : pick a wall, find the cell on the other side, put it in the maze if it's not
-                //and add its walls, if it is then ignore it
-                //then pick a new wall and start again til no more walls
+                Log.d("gyro", "wall selected");
+                var chosenWall = remainingWalls.get((int)(Math.random() * remainingWalls.size()));
+                Log.d("gyro", "chosen wall: "+chosenWall);
+                if (!mazeCells.contains(chosenWall.subCell)) {
+                    remainingWalls.addAll(chosenWall.subCell.adjacentWalls);
+                    mazeCells.add(chosenWall.subCell);
+                } else if (!mazeCells.contains(chosenWall.superCell)) {
+                    remainingWalls.addAll(chosenWall.superCell.adjacentWalls);
+                    mazeCells.add(chosenWall.superCell);
+                } else {
+                    drawnWalls.add(chosenWall);
+                }
+                remainingWalls.removeIf(wall -> wall == chosenWall);
+                Log.d("gyro", "removing wall");
+
+                //need to keep array of drawnWalls (in generate func) and draw only those walls after
+                //currently all walls are added and subsequently prepped to draw
             }
         }
 
@@ -328,6 +363,18 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
             walls.add(new RectF(5, 5,  mazeWidth, 20)); // ceiling
             walls.add(new RectF(mazeWidth - 20, 5, mazeWidth, mazeHeight)); // right wall
             walls.add(new RectF(5, mazeHeight - 20,  mazeWidth, mazeHeight)); // floor
+        }
+
+        public int convertRowToScreen(int row, int mazeHeight) {
+            var rowWidth = mazeHeight/rows; // these values are for placing ball and goal later
+            var halfRow = rowWidth/2;
+            return (row*rowWidth)-halfRow;
+        }
+
+        public int convertColToScreen(int col, int mazeWidth) {
+            var colWidth = mazeWidth/columns;
+            var halfCol = colWidth/2;
+            return (col*colWidth)-halfCol;
         }
 
         public void draw(Canvas canvas, Paint paint, int screenWidth, int screenHeight) {
@@ -354,10 +401,13 @@ public class GyroGame extends AppCompatActivity implements SensorEventListener {
     private class Goal {
         float x, y, size;
 
-        public Goal(float x, float y, float size) {
+        public Goal() {
+            this.size = 40;
+        }
+
+        public void placeGoal(float x, float y) {
             this.x = x;
             this.y = y;
-            this.size = size;
         }
 
         public void draw(Canvas canvas, Paint paint) {
